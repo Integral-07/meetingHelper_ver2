@@ -46,7 +46,6 @@ def message_handler(request):
     system = System(id=0)
     if request.method == 'POST':
 
-
         request = json.loads(request.body.decode('utf-8'))
         event = request['events'][0]
         event_type = event['type']
@@ -104,6 +103,20 @@ def message_handler(request):
             }
             line_message = LineMessage(reply_messages)
             line_message.reply(event['replyToken'])
+
+        if event_type == 'unfollow':
+
+            try:
+                member = Member.objects.get(user_id=line_id)
+                member.delete()
+                print(f"Delete {line_id}, successfully")
+                return HttpResponse(status=200)
+
+            except:
+                print("Unexpected error occured when delete member")
+                return HttpResponse(status=500)
+
+            
 
         if event_type == 'message':
             """
