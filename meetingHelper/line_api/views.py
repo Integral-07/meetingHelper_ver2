@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import os, json, urllib.request
 from .util.message_handle_supporter import *
-from .models import Member
+from .models import Member, System
 
 def index(request):
 
@@ -18,20 +18,20 @@ class LineMessage():
     
     def __init__(self, messages):
 
-        self.messages = messages
+        if isinstance(messages, list):
+            self.messages = messages
+        else:
+            self.messages = [messages]
 
     def reply(self, replyToken):
 
         body = {
             'replyToken': replyToken,
-            'messages': [
-
-                self.messages,
-            ]
+            'messages': self.messages
         }
 
-        print(body)
         req = urllib.request.Request(REPLY_ENDPOINT_URL, json.dumps(body).encode(), HEADER)
+        print(body)
         try:
             with urllib.request.urlopen(req) as res:
                 body = res.read()
@@ -43,15 +43,16 @@ class LineMessage():
 @csrf_exempt
 def message_handler(request):
 
-    
+    system = System(id=0)
     if request.method == 'POST':
+
+
         request = json.loads(request.body.decode('utf-8'))
         event = request['events'][0]
         event_type = event['type']
         line_id = event['source']['userId']
-        replyToken = event['replyToken']
 
-        reply_messages = "unknown message"
+        reply_messages = [{"type": "text", "text": "unknown message"}]
 
         #line_message = LineMessage(message)
         #line_message.reply(line_message)
@@ -74,6 +75,12 @@ def message_handler(request):
                 new_member.save()
                 member = new_member
 
+
+            gradeIndex = system.grade_index
+
+            gradeIndex_first = gradeIndex % 3 + 1
+            gradeIndex_second = (gradeIndex + 1) % 3 + 1
+
             reply_messages = {
 
                 "type": "template",
@@ -85,18 +92,18 @@ def message_handler(request):
                         {
                             "type": "message",
                             "label": "1年生",
-                            "text": "学年区分" #+ gradeIndex_first
+                            "text": "GradeClass" + str(gradeIndex_first)
                         },
                         {
                             "type": "message",
                             "label": "2年生",
-                            "text": "学年区分" #+ gradeIdex_second
-                        }
+                            "text": "GradeClass" + str(gradeIndex_second)
+                        },
                     ]
                 }
             }
             line_message = LineMessage(reply_messages)
-            line_message.reply(replyToken)
+            line_message.reply(event['replyToken'])
 
         if event_type == 'message':
             """
@@ -111,25 +118,25 @@ def message_handler(request):
 
             if message_type == 'text': #受信したのがテキストメッセージだった時
 
+                member = Member.objects.get(user_id=line_id)
                 message_text = event['message']['text']
-                if "GradeClass" in message_text and isGradeclassFieldEmpty():
+                if "GradeClass" in message_text and isGradeclassFieldEmpty(line_id):
 
-                    updated_member = Member(user_id=member.user_id, grade_class=message_text)
+                    updated_member = Member(user_id=line_id, grade_class=message_text)
                     updated_member.save()
 
-                    reply_messages = "学年区分を設定しました\n次に氏名を教えてください"
+                    reply_messages = [{"type": "text", "text": "学年区分を設定しました\n次に氏名を教えてください"}]
                 
-                if isNameFieldEmpty() and not isGradeclassFieldEmpty():
+                elif isNameFieldEmpty(line_id) and not isGradeclassFieldEmpty(line_id):
 
                     updated_member = Member(user_id=member.user_id, grade_class=member.grade_class, name=message_text)
                     updated_member.save()
 
-                    reply_messages = " さんで登録しました"
+                    reply_messages = [{"type": "text", "text": f"{message_text} さんで登録しました"}]
                 
-                line_message = LineMessage(reply_messages)
-                line_message.reply()
+        line_message = LineMessage(reply_messages)
+        line_message.reply(event['replyToken'])
 
 
     return HttpResponse(status=200)
-
 
