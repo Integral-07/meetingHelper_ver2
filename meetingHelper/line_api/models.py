@@ -9,3 +9,7 @@ class Member(models.Model):
     groupsep_flag = models.IntegerField(default=0, verbose_name="グループ分けフラグ")
 
     absent_reason = models.TextField(default="", max_length=2000, verbose_name="欠席理由")
+
+class System(models.Model):
+
+    grade_index = models.IntegerField(default=0)
