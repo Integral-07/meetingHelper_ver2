@@ -105,7 +105,11 @@ def message_handler(request):
             line_message.reply(event['replyToken'])
 
         if event_type == 'unfollow':
+            """
+            友達登録解除（ブロック）されたときの処理
 
+            データベースから該当ユーザ情報を削除する
+            """
             try:
                 member = Member.objects.get(user_id=line_id)
                 member.delete()
@@ -116,7 +120,6 @@ def message_handler(request):
                 print("Unexpected error occured when delete member")
                 return HttpResponse(status=500)
 
-            
 
         if event_type == 'message':
             """
@@ -125,9 +128,11 @@ def message_handler(request):
             内容によって処理を分岐する
             ・学年区分が0のとき、受信したメッセージが学年区分の正規表現に一致するなら学年区分してデータベースに設定
             ・名前が空欄なら、受信したメッセージを名前として処理
+            ・
             """
 
             message_type = event['message']['type']
+            member = Member.objects.get(user_id=line_id)
 
             if message_type == 'text': #受信したのがテキストメッセージだった時
 
@@ -146,7 +151,90 @@ def message_handler(request):
                     updated_member.save()
 
                     reply_messages = [{"type": "text", "text": f"{message_text} さんで登録しました"}]
+
+                if message_text == "欠席連絡":
+                    #欠席連絡フェーズ
+
+                    if member.absent_reason == "":
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=1, groupsep_flag=0)
+                        updated_member.save()
+
+                        reply_messages = [{"type": "text", "text": "欠席理由を教えてください\n理由の送信を以って欠席連絡が確定します"}]
+
+                    else:
+
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=2, groupsep_flag=0)
+                        updated_member.save()
+
+                        reply_messages = [{
+                            "type": "template",
+                            "altText": "確認",
+                            "template": {
+                            "type": "confirm",
+                            "text": f"既に欠席連絡が「{member.absent_reason}」で登録されています\n続行すると登録が削除されます",
+                            "actions": [
+                                {
+                                    "type": "message",
+                                    "label": "続行",
+                                    "text": "続行"
+                                },
+                                {
+                                    "type": "message",
+                                    "label": "キャンセル",
+                                    "text": "キャンセル"
+                                }
+                            ]
+                            }
+                        }]
+
+
+                #欠席理由登録フェーズ
+                elif member.absent_flag == 1:
+
+                    if message_text == "キャンセル":
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0,absent_reason=member.absent_reason)
+                        updated_member.save()
+
+                        reply_messages = [{"type": "text", "text": "欠席連絡をキャンセルしました"}]
+
+                    else:
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0,absent_reason=message_text)
+                        updated_member.save()
+
+                        reply_messages = [{"type": "text", "text": f"欠席理由を「{message_text}」で登録しました"}]
                 
+                #欠席理由更新フェーズ
+                elif member.absent_flag == 2:
+
+                    if message_text == "続行":
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason="")
+                        updated_member.save()
+
+                        reply_messages = [{"type": "text", "text": "欠席連絡を取り消しました"}]
+
+                    elif message_text == "キャンセル":
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
+                        updated_member.save()
+
+                        reply_messages = [{"type": "text", "text": "欠席連絡は保持されました"}]
+
+                #欠席状況確認フェーズ
+                if message_text == "欠席状況確認":
+
+                    absent_members = Member.objects.exclude(absent_reason="")
+
+                    pre_reply_messages = ""
+                    for member in absent_members:
+                        pre_reply_messages += f"\n{member.name}: 「{member.absent_reason}」"
+
+                    reply_messages = [
+                            {
+                                "type": "text", 
+                                "text": "以下のメンバが欠席予定です\n" + pre_reply_messages
+                            }
+                        ]
+
+
         line_message = LineMessage(reply_messages)
         line_message.reply(event['replyToken'])
 
