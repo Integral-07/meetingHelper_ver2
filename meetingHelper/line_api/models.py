@@ -10,6 +10,8 @@ class Member(models.Model):
 
     absent_reason = models.TextField(default="", max_length=2000, verbose_name="欠席理由")
 
+
+
 class System(models.Model):
 
     grade_index = models.IntegerField(default=0)

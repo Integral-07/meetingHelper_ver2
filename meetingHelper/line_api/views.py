@@ -152,8 +152,8 @@ def message_handler(request):
 
                     reply_messages = [{"type": "text", "text": f"{message_text} さんで登録しました"}]
 
+                #欠席連絡フェーズ
                 if message_text == "欠席連絡":
-                    #欠席連絡フェーズ
 
                     if member.absent_reason == "":
                         updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=1, groupsep_flag=0)
@@ -186,7 +186,6 @@ def message_handler(request):
                             ]
                             }
                         }]
-
 
                 #欠席理由登録フェーズ
                 elif member.absent_flag == 1:
@@ -233,6 +232,37 @@ def message_handler(request):
                                 "text": "以下のメンバが欠席予定です\n" + pre_reply_messages
                             }
                         ]
+
+                #グループ作成フェーズ
+                if message_text == "グループ作成":
+
+                    updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=1, absent_reason=member.absent_reason)
+                    updated_member.save()
+
+                    attendance_members = Member.objects.filter(absent_reason="")
+
+                    pre_reply_messages = ""
+                    member_count = len(attendance_members)
+                    for member in attendance_members:
+                        pre_reply_messages += f"{member.name}\n"
+
+                    reply_messages = [{"type": "text", "text": f"{pre_reply_messages}\n以上の {member_count} 人が出席予定です\n何グループ作成しますか？"}]
+
+                elif member.groupsep_flag == 1:
+
+                    num_member = Member.objects.filter(absent_reason="").count()
+                    if message_text.isdigit() and int(message_text) <= num_member and int(message_text) != 0: #入力値が出席可能なメンバ数以下の整数ならば
+                        
+                        member_list = Member.objects.filter(absent_reason="")
+                        MakeGroups(int(message_text), member_list)
+
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
+                        updated_member.save()
+                        reply_messages = [{"type": "text", "text": "グループを作成しました"}]
+
+                    else:
+                        reply_messages = [{"type": "text", "text": f"グループ数が無効な値です\n出席可能なメンバ数以下の自然数を入力してください\n(現在の出席可能なメンバ:{num_member}人)"}]
+
 
 
         line_message = LineMessage(reply_messages)

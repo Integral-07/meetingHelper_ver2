@@ -19,11 +19,5 @@ def isNameFieldEmpty(_user_id):
     else:
         return False
     
-def isAbsentFlag(_user_id):
-
-    member = Member.objects.get(user_id=_user_id)
-    
-    if member.absent_flag == 1:
-        return True
-    else:
-        return False
+def MakeGroups(_num_group, _member_list):
+    pass
