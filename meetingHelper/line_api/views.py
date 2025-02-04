@@ -258,16 +258,17 @@ def message_handler(request):
                         num_groups = int(message_text)
 
                         groups = MakeGroups(num_groups)
+
+                        return_text = ""
                         for i, group in enumerate(groups, 1):
-                            print(f"グループ {i}: {[member.name for member in group]}")
+                            return_text += f"グループ {i}: {[member.name for member in group]}" + "\n"
 
                         updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
                         updated_member.save()
-                        reply_messages = [{"type": "text", "text": "グループを作成しました"}]
+                        reply_messages = [{"type": "text", "text": "グループを作成しました\n\n" + return_text}]
 
                     else:
                         reply_messages = [{"type": "text", "text": f"グループ数が無効な値です\n出席可能なメンバ数以下の自然数を入力してください\n(現在の出席可能なメンバ:{num_member}人)"}]
-
 
 
         line_message = LineMessage(reply_messages)
