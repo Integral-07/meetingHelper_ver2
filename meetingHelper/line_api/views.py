@@ -253,8 +253,13 @@ def message_handler(request):
                     num_member = Member.objects.filter(absent_reason="").count()
                     if message_text.isdigit() and int(message_text) <= num_member and int(message_text) != 0: #入力値が出席可能なメンバ数以下の整数ならば
                         
-                        member_list = Member.objects.filter(absent_reason="")
-                        MakeGroups(int(message_text), member_list)
+
+                        #member_list = Member.objects.filter(absent_reason="")
+                        num_groups = int(message_text)
+
+                        groups = MakeGroups(num_groups)
+                        for i, group in enumerate(groups, 1):
+                            print(f"グループ {i}: {[member.name for member in group]}")
 
                         updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
                         updated_member.save()
