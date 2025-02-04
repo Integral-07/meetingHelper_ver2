@@ -188,8 +188,8 @@ def message_handler(request):
                         }]
 
 
+                #欠席理由登録フェーズ
                 elif member.absent_flag == 1:
-                    #欠席理由登録フェーズ
 
                     if message_text == "キャンセル":
                         updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0,absent_reason=member.absent_reason)
@@ -203,8 +203,8 @@ def message_handler(request):
 
                         reply_messages = [{"type": "text", "text": f"欠席理由を「{message_text}」で登録しました"}]
                 
+                #欠席理由更新フェーズ
                 elif member.absent_flag == 2:
-                    #欠席理由更新フェーズ
 
                     if message_text == "続行":
                         updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason="")
@@ -218,7 +218,23 @@ def message_handler(request):
 
                         reply_messages = [{"type": "text", "text": "欠席連絡は保持されました"}]
 
-                
+                #欠席状況確認フェーズ
+                if message_text == "欠席状況確認":
+
+                    absent_members = Member.objects.exclude(absent_reason="")
+
+                    pre_reply_messages = ""
+                    for member in absent_members:
+                        pre_reply_messages += f"\n{member.name}: 「{member.absent_reason}」"
+
+                    reply_messages = [
+                            {
+                                "type": "text", 
+                                "text": "以下のメンバが欠席予定です\n" + pre_reply_messages
+                            }
+                        ]
+
+
         line_message = LineMessage(reply_messages)
         line_message.reply(event['replyToken'])
 
