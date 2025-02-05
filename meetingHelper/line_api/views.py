@@ -233,7 +233,7 @@ def message_handler(request):
                             }
                         ]
 
-                #グループ作成フェーズ
+                #グループ作成依頼フェーズ
                 if message_text == "グループ作成":
 
                     updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=1, absent_reason=member.absent_reason)
@@ -248,11 +248,11 @@ def message_handler(request):
 
                     reply_messages = [{"type": "text", "text": f"{pre_reply_messages}\n以上の {member_count} 人が出席予定です\n何グループ作成しますか？"}]
 
+                #グループ数確認and作成フェーズ
                 elif member.groupsep_flag == 1:
 
                     num_member = Member.objects.filter(absent_reason="").count()
                     if message_text.isdigit() and int(message_text) <= num_member and int(message_text) != 0: #入力値が出席可能なメンバ数以下の整数ならば
-                        
 
                         #member_list = Member.objects.filter(absent_reason="")
                         num_groups = int(message_text)
@@ -265,7 +265,17 @@ def message_handler(request):
 
                         updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
                         updated_member.save()
+
+                        GenerateGroupImage(num_groups, groups)
                         reply_messages = [{"type": "text", "text": "グループを作成しました\n\n" + return_text}]
+
+                    elif message_text == "キャンセル":
+
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
+                        updated_member.save()
+
+                        reply_messages = [{"type": "text", "text": "グループ作成をキャンセルしました"}]
+
 
                     else:
                         reply_messages = [{"type": "text", "text": f"グループ数が無効な値です\n出席可能なメンバ数以下の自然数を入力してください\n(現在の出席可能なメンバ:{num_member}人)"}]
