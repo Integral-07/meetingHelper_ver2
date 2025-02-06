@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-import os, json, urllib.request
+import random, json, urllib.request
 from .util.message_handle_supporter import *
 from .models import Member, System
 from django.conf import settings
@@ -59,15 +59,6 @@ def message_handler(request):
         #line_message = LineMessage(message)
         #line_message.reply(line_message)
 
-        try:
-            Member.objects.get(user_id=member.user_id)
-        except:
-            
-            reply_messages = [{"type": "text", "text": "あなたはメンバーから削除されています\n委員会から脱退又は引退している場合は、このアカウントを友達から削除してください"}]
-            line_message = LineMessage(reply_messages)
-            line_message.reply(event['replyToken'])
-
-            return HttpResponse(status=200)
 
         if event_type == 'follow':
 
@@ -114,8 +105,6 @@ def message_handler(request):
                     ]
                 }
             }
-            line_message = LineMessage(reply_messages)
-            line_message.reply(event['replyToken'])
 
         if event_type == 'unfollow':
             """
@@ -132,6 +121,16 @@ def message_handler(request):
             except:
                 print("Unexpected error occured when delete member")
                 return HttpResponse(status=500)
+            
+        try:
+            Member.objects.get(user_id=line_id)
+        except:
+            
+            reply_messages = [{"type": "text", "text": "あなたはメンバーから削除されています\n委員会から脱退又は引退している場合は、このアカウントを友達から削除してください"}]
+            line_message = LineMessage(reply_messages)
+            line_message.reply(event['replyToken'])
+
+            return HttpResponse(status=200)
 
 
         if event_type == 'message':
@@ -165,15 +164,21 @@ def message_handler(request):
 
                     reply_messages = [{"type": "text", "text": f"{message_text} さんで登録しました"}]
 
+                
                 #委員長権限機能
                 if member.user_id == system.chief_id:
 
                     #世代交代フェーズ
                     if message_text == "世代交代":
 
-                        if member.grade_class == system.grade_index:
+                        if member.grade_class == "GradeClass" + str(system.grade_index):
 
-                            reply_messages = [{"type": "text", "text": "実行権限がありません\nこの機能は委員長のみに権限があります"}]
+                            reply_messages = [
+                                {
+                                    "type": "text", 
+                                    "text": "あなたは最高学年の委員長であるので、この機能を実行できません\n次期委員長に委員長を交代してから次期委員長に実行させてください\n\n委員長交代の方法 : 現委員長が部会ヘルパーに「委員長交代」と送信する"
+                                }
+                            ]
 
                             line_message = LineMessage(reply_messages)
                             line_message.reply(event['replyToken'])
@@ -222,16 +227,30 @@ def message_handler(request):
 
                             reply_messages = [{"type": "text", "text": "世代交代をキャンセルしました"}]
 
-                    #
-                    if message_text == "":
-                        pass
+                    #委員長交代フェーズ
+                    if message_text == "委員長交代":
+                        
+                        access_code = random.randint(1000, 9999)
+
+                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register=str(access_code))
+                        updated_system.save()
+
+                        reply_messages = [{"type": "text", "text": f"委員長を交代するには以下の認証コードを次期委員長が部会ヘルパーに送信してください\n認証コードを(現委員長)->(次期委員長)->(部会ヘルパ)に送信します\n\n認証コード: {access_code}"}]
 
                 else:
 
-                    if message_text == "世代交代":
+                    if message_text == "世代交代" or message_text == "委員長交代":
 
                         reply_messages = [{"type": "text", "text": "実行権限がありません\nこの機能は委員長のみに権限があります"}]
 
+
+                #委員長交代承認フェーズ
+                if message_text == system.flag_register and message_text.isdigit():
+
+                    updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=member.user_id ,flag_register="NULL")
+                    updated_system.save()
+
+                    reply_messages = [{"type": "text", "text": "委員長を交代しました\n前期委員長に交代が完了したことを伝えてください"}]
 
                 #欠席連絡フェーズ
                 if message_text == "欠席連絡":
