@@ -12,7 +12,7 @@ def index(request):
 REPLY_ENDPOINT_URL = "https://api.line.me/v2/bot/message/reply"
 HEADER = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + str(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
+    'Authorization': 'Bearer ' + str(settings.LINE_CHANNEL_ACCESS_TOKEN)
 }
 
 class LineMessage():

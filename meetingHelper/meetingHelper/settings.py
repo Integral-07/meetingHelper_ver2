@@ -31,6 +31,26 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+if DEBUG == True:
+    import environ
+    # instanceを作成
+    env = environ.Env(
+    # 初期値を設定
+        DEBUG=(bool, False)
+    )
+
+    # .envファイルのパスを指定するためにBASE_DIRをmanage.pyのある階層に指定
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # manage.pyのある階層にある.envを読み込む
+    environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+    SUPABASE_DB_NAME = env('SUPABASE_DB_NAME')
+    SUPABASE_DB_USER = env('SUPABASE_DB_USER')
+    SUPABASE_DB_PASSWORD = env('SUPABASE_DB_PASSWORD')
+    SUPABASE_DB_HOST = env('SUPABASE_DB_HOST')
+
+    LINE_CHANNEL_ACCESS_TOKEN = env('LINE_CHANNEL_ACCESS_TOKEN')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -80,10 +100,10 @@ WSGI_APPLICATION = "meetingHelper.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'NAME': os.getenv('SUPABASE_DB_NAME'),
-        'USER': os.getenv('SUPABASE_DB_USER'),
-        'PASSWORD': os.getenv('SUPABASE_DB_PASSWORD'),
-        'HOST': os.getenv('SUPABASE_DB_HOST'),
+        'NAME': SUPABASE_DB_NAME,
+        'USER': SUPABASE_DB_USER,
+        'PASSWORD': SUPABASE_DB_PASSWORD,
+        'HOST': SUPABASE_DB_HOST,
         'PORT': '5432',
     }
 }
