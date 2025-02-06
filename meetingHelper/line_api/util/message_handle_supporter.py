@@ -130,3 +130,18 @@ def GenerateGroupImage(_num_groups, _groups):
 
     # URLを返す
     return os.path.join(settings.MEDIA_URL, image_path)
+
+def rotateGeneration():
+
+    system = System.objects.get(id=0)
+    grade_index = system.grade_index
+
+    cur_grade_index = system.grade_index
+    Member.objects.filter(grade_class=f"GradeClass{cur_grade_index}").delete() #最高学年のメンバを削除する
+
+    cur_grade_index -= 1
+    if cur_grade_index == 0:
+        cur_grade_index = 3
+
+    updated_system = System(id=system.id, grade_index=cur_grade_index, chief_id=system.chief_id ,flag_register="NULL")
+    updated_system.save()

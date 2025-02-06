@@ -15,3 +15,6 @@ class Member(models.Model):
 class System(models.Model):
 
     grade_index = models.IntegerField(default=0)
+    chief_id = models.CharField(default="", max_length=100, verbose_name="委員長ID")
+
+    flag_register = models.CharField(default="NULL", max_length=100, verbose_name="フラグレジスタ")

@@ -44,7 +44,7 @@ class LineMessage():
 @csrf_exempt
 def message_handler(request):
 
-    system = System(id=0)
+    system = System.objects.get(id=0)
 
     request_raw = request
     if request.method == 'POST':
@@ -155,18 +155,73 @@ def message_handler(request):
 
                     reply_messages = [{"type": "text", "text": f"{message_text} さんで登録しました"}]
 
+                #委員長権限機能
+                if member.user_id == system.chief_id:
+
+                    #世代交代フェーズ
+                    if message_text == "世代交代":
+
+                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="RG")
+                        updated_system.save()
+
+                        reply_messages = [
+                            {
+                                "type": "template",
+                                "altText": "確認",
+                                "template": {
+                                    "type": "confirm",
+                                    "text": f"世代を交代します\n世代を交代すると、現在の最高学年のメンバは削除されます\nよろしいですか？",
+                                    "actions": [
+                                        {
+                                            "type": "message",
+                                            "label": "続行",
+                                            "text": "続行"
+                                        },
+                                        {
+                                            "type": "message",
+                                            "label": "キャンセル",
+                                            "text": "キャンセル"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+
+                    elif system.flag_register == "RG":
+
+                        if message_text == "続行":
+
+                            rotateGeneration()
+
+                            reply_messages = [{"type": "text", "text": "世代交代が完了しました"}]
+
+                        else:
+
+                            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="NULL")
+                            updated_system.save()
+
+                            reply_messages = [{"type": "text", "text": "世代交代をキャンセルしました"}]
+
+                else:
+
+                    if message_text == "世代交代":
+                        print("mem", member.user_id)
+                        print("sys", system.chief_id)
+                        reply_messages = [{"type": "text", "text": "実行権限がありません\nこの機能は委員長のみに権限があります"}]
+
+
                 #欠席連絡フェーズ
                 if message_text == "欠席連絡":
 
                     if member.absent_reason == "":
-                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=1, groupsep_flag=0)
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=1, groupsep_flag=0, absent_reason=member.absent_reason)
                         updated_member.save()
 
                         reply_messages = [{"type": "text", "text": "欠席理由を教えてください\n理由の送信を以って欠席連絡が確定します"}]
 
                     else:
 
-                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=2, groupsep_flag=0)
+                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=2, groupsep_flag=0, absent_reason=member.absent_reason)
                         updated_member.save()
 
                         reply_messages = [{
@@ -297,6 +352,7 @@ def message_handler(request):
 
                     else:
                         reply_messages = [{"type": "text", "text": f"グループ数が無効な値です\n出席可能なメンバ数以下の自然数を入力してください\n(現在の出席可能なメンバ:{num_member}人)"}]
+
 
 
         line_message = LineMessage(reply_messages)
