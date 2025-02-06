@@ -126,9 +126,6 @@ def GenerateGroupImage(_num_groups, _groups):
     # 画像をサーバーに保存する
     file_path = os.path.join(settings.MEDIA_ROOT, image_path)
 
-    # ファイルを保存
-    #with open(file_path, 'wb') as f:
-    #    f.write(byte_io.read())
     img.save(file_path)
 
     # URLを返す
