@@ -59,6 +59,16 @@ def message_handler(request):
         #line_message = LineMessage(message)
         #line_message.reply(line_message)
 
+        try:
+            Member.objects.get(user_id=member.user_id)
+        except:
+            
+            reply_messages = [{"type": "text", "text": "あなたはメンバーから削除されています\n委員会から脱退又は引退している場合は、このアカウントを友達から削除してください"}]
+            line_message = LineMessage(reply_messages)
+            line_message.reply(event['replyToken'])
+
+            return HttpResponse(status=200)
+
         if event_type == 'follow':
 
             """
@@ -161,6 +171,15 @@ def message_handler(request):
                     #世代交代フェーズ
                     if message_text == "世代交代":
 
+                        if member.grade_class == system.grade_index:
+
+                            reply_messages = [{"type": "text", "text": "実行権限がありません\nこの機能は委員長のみに権限があります"}]
+
+                            line_message = LineMessage(reply_messages)
+                            line_message.reply(event['replyToken'])
+
+                            return HttpResponse(status=200)
+
                         updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="RG")
                         updated_system.save()
 
@@ -187,6 +206,7 @@ def message_handler(request):
                             }
                         ]
 
+                    #世代交代確定フェーズ
                     elif system.flag_register == "RG":
 
                         if message_text == "続行":
@@ -202,11 +222,14 @@ def message_handler(request):
 
                             reply_messages = [{"type": "text", "text": "世代交代をキャンセルしました"}]
 
+                    #
+                    if message_text == "":
+                        pass
+
                 else:
 
                     if message_text == "世代交代":
-                        print("mem", member.user_id)
-                        print("sys", system.chief_id)
+
                         reply_messages = [{"type": "text", "text": "実行権限がありません\nこの機能は委員長のみに権限があります"}]
 
 
