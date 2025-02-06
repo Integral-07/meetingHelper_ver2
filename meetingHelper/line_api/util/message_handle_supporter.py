@@ -1,7 +1,9 @@
+from django.conf import settings
 import random
 from ..models import Member, System
 from PIL import Image, ImageDraw, ImageFont
 import os, datetime
+from io import BytesIO
 
 def isGradeclassFieldEmpty(_user_id):
 
@@ -119,7 +121,15 @@ def GenerateGroupImage(_num_groups, _groups):
         y_line = y_start + header_height + i * row_height
         draw.line([(x_start, y_line), (width - 30, y_line)], fill=line_color, width=2)
 
-    # 画像保存
     image_path = "group_table.png"
-    img.save(image_path)
-    return image_path
+
+    # 画像をサーバーに保存する
+    file_path = os.path.join(settings.MEDIA_ROOT, image_path)
+
+    # ファイルを保存
+    #with open(file_path, 'wb') as f:
+    #    f.write(byte_io.read())
+    img.save(file_path)
+
+    # URLを返す
+    return os.path.join(settings.MEDIA_URL, image_path)
