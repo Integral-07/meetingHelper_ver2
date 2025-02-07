@@ -31,7 +31,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-if DEBUG == True:
+if DEBUG:
     import environ
     # instanceを作成
     env = environ.Env(
@@ -51,6 +51,7 @@ if DEBUG == True:
 
     LINE_CHANNEL_ACCESS_TOKEN = env('LINE_CHANNEL_ACCESS_TOKEN')
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -61,6 +62,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "line_api",
+    "access_site",
+
 ]
 
 MIDDLEWARE = [
@@ -126,6 +129,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+#AUTH_USER_MODEL = "access_site.User" # カスタムユーザーを認証用ユーザーとして登録
 
 
 # Internationalization
