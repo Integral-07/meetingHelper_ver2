@@ -74,7 +74,8 @@ INSTALLED_APPS = [
     "line_api",
     "access_site",
     "app",
-
+    #"batch",
+    'batch.apps.BatchConfig',
 ]
 
 MIDDLEWARE = [

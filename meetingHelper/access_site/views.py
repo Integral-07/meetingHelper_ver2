@@ -140,10 +140,11 @@ def member_edit(request, member_id):
                 "nick_name": nick_name,
                 "first_grade_class": first_grade,
                 "second_grade_class": second_grade,
-                "third_grade_class": third_grade
+                "third_grade_class": third_grade,
+                "error": "Error occured while update date"
             }
 
-            return render(request, 'access_site/member_edit.html', {"error": "Error occured while update date"})
+            return render(request, 'access_site/member_edit.html', params)
 
     else:
         form = MemberEditForm(instance=member)
