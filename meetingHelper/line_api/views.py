@@ -44,9 +44,11 @@ class LineMessage():
 @csrf_exempt
 def message_handler(request):
 
+
     system = System.objects.get(id=0)
 
     request_raw = request
+
     if request.method == 'POST':
 
         request = json.loads(request.body.decode('utf-8'))
