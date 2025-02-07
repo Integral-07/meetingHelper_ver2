@@ -23,13 +23,46 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-+u-m=rpl6xc4@6gwe042z+qqcde@h57cuoepby_bw*#7u+4%u%"
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', '.ngrok-free.app','.render.com']
+
+
+if DEBUG:
+    import environ
+    # instanceを作成
+    env = environ.Env(
+    # 初期値を設定
+        DEBUG=(bool, False)
+    )
+
+    # .envファイルのパスを指定するためにBASE_DIRをmanage.pyのある階層に指定
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # manage.pyのある階層にある.envを読み込む
+    environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+    SUPABASE_DB_NAME = env('SUPABASE_DB_NAME')
+    SUPABASE_DB_USER = env('SUPABASE_DB_USER')
+    SUPABASE_DB_PASSWORD = env('SUPABASE_DB_PASSWORD')
+    SUPABASE_DB_HOST = env('SUPABASE_DB_HOST')
+
+    LINE_CHANNEL_ACCESS_TOKEN = env('LINE_CHANNEL_ACCESS_TOKEN')
+
+    SUPERUSER_NAME = env("SUPERUSER_NAME")
+    SUPERUSER_EMAIL = env("SUPERUSER_EMAIL")
+    SUPERUSER_PASSWORD = env("SUPERUSER_PASSWORD")
+
+    LINE_CHANNEL_ID = env("LINE_CHANNEL_ID")
 
 
 # Application definition
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://538a-2400-4051-6743-c500-a4e0-4a1-9b3e-ec87.ngrok-free.app/"
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -39,10 +72,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "line_api",
+    "access_site",
+    "app",
+    #"batch",
+    'batch.apps.BatchConfig',
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    #'whitenoise.middleware.WhiteNoiseMiddleware', # 追加
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -78,10 +116,10 @@ WSGI_APPLICATION = "meetingHelper.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'NAME': os.getenv('SUPABASE_DB_NAME'),
-        'USER': os.getenv('SUPABASE_DB_USER'),
-        'PASSWORD': os.getenv('SUPABASE_DB_PASSWORD'),
-        'HOST': os.getenv('SUPABASE_DB_HOST'),
+        'NAME': SUPABASE_DB_NAME,
+        'USER': SUPABASE_DB_USER,
+        'PASSWORD': SUPABASE_DB_PASSWORD,
+        'HOST': SUPABASE_DB_HOST,
         'PORT': '5432',
     }
 }
@@ -105,6 +143,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#AUTH_USER_MODEL = "access_site.User" # カスタムユーザーを認証用ユーザーとして登録
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -122,8 +162,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+#STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+

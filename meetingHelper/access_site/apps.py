@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class LineApiConfig(AppConfig):
+class AccessSiteConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "line_api"
+    name = "access_site"
