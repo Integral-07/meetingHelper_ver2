@@ -54,11 +54,7 @@ def message_handler(request):
         event_type = event['type']
         line_id = event['source']['userId']
 
-        reply_messages = [{"type": "text", "text": "unknown message"}]
-
-        #line_message = LineMessage(message)
-        #line_message.reply(line_message)
-
+        reply_messages = [{"type": "text", "text": "Siri> すみません、よくわかりません"}]
 
         if event_type == 'follow':
 
@@ -259,7 +255,33 @@ def message_handler(request):
                         updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=1, groupsep_flag=0, absent_reason=member.absent_reason)
                         updated_member.save()
 
-                        reply_messages = [{"type": "text", "text": "欠席理由を教えてください\n理由の送信を以って欠席連絡が確定します"}]
+                        reply_messages = [
+                            {
+                                "type": "text", 
+                                "text": "欠席理由を教えてください\n理由の送信を以って欠席連絡が確定します",
+                                "quickReply": {
+                                    "items": [
+                                        {
+                                            "type": "action",
+                                            #"imageUrl": image_url.shrine_icon_url,
+                                            "action": {
+                                                "type": "message",
+                                                "label": "議長",
+                                                "text": "議長のため"
+                                            }
+                                        },
+                                        {
+                                            "type": "action",
+                                            #"imageUrl": image_url.restaurant_icon_url,
+                                            "action": {
+                                                "type": "message",
+                                                "label": "書記",
+                                                "text": "書記のため"
+                                            }
+                                        }
+                                ]}
+                            }
+                        ]
 
                     else:
 
@@ -346,7 +368,12 @@ def message_handler(request):
                     for member in attendance_members:
                         pre_reply_messages += f"{member.name}\n"
 
-                    reply_messages = [{"type": "text", "text": f"{pre_reply_messages}\n以上の {member_count} 人が出席予定です\n何グループ作成しますか？"}]
+                    reply_messages = [
+                        {
+                            "type": "text", 
+                            "text": f"{pre_reply_messages}\n以上の {member_count} 人が出席予定です\n何グループ作成しますか？"
+                        }
+                    ]
 
                 #グループ数確認and作成フェーズ
                 elif member.groupsep_flag == 1:

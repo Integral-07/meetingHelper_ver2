@@ -1,0 +1,21 @@
+{% extends 'access_site/base.html' %}
+
+{% block content %}
+  <div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10">
+    <h2 class="text-3xl font-semibold mb-4">メンバー削除</h2>
+
+    <form method="post" class="bg-white p-6 flex flex-col">
+      {% csrf_token %}
+      <p class="text-gray-700 mb-4 text-2xl">本当にこのメンバーを削除しますか？</p>
+
+      <p class="text-red-500 mb-4 text-2xl">[ 学年 : {{grade}}年生 ]  氏名 : {{member.name}} (LINEの名前 : {{nick_name}})</p>
+      
+      <!-- Center the delete button -->
+      <div class="flex justify-center mt-10">
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+          削除
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

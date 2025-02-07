@@ -1,0 +1,56 @@
+{% extends 'access_site/base.html' %}
+
+{% block content %}
+    
+    <style>
+        .input-border {
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    </style>
+
+  <div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10">
+    <h2 class="text-3xl font-semibold mb-4">メンバー編集</h2>
+
+    <form method="post"  class="flex-col bg-white p-6 shadow-md rounded-lg">
+      {% csrf_token %}
+    
+      <div class="mb-4 flex flex-col">
+        <label class="justify-center text-gray-700">ID(readonly):</label>
+          {{ form.user_id }} 
+      </div>
+
+      <div class="mb-4 flex flex-col">
+        <label class="justify-center text-gray-700">LINEの名前(readonly):</label>
+        <div class="input-border">
+          {{ nick_name }} 
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="justify-center text-gray-700">学年(1年生=GradeClass{{ first_grade_class }} / 2年生=GradeClass{{ second_grade_class }} / 3年生=GradeClass{{ third_grade_class }}):</label>
+        {{ form.grade_class }}
+      </div>
+
+      <div class="mb-4">
+        <label class="justify-center text-gray-700">名前:</label>
+        {{ form.name }} 
+      </div>
+
+      <div class="mb-4 text-red-500">
+        {{ error }} 
+      </div>
+      
+
+      <!-- Center the button -->
+      <div class="flex justify-center">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          更新
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

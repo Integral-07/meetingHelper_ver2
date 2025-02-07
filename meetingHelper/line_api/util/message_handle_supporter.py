@@ -145,3 +145,29 @@ def rotateGeneration():
 
     updated_system = System(id=system.id, grade_index=cur_grade_index, chief_id=system.chief_id ,flag_register="NULL")
     updated_system.save()
+
+def identifyGrade(_grade_class):
+
+    grade_index = System.objects.get(id=0).grade_index
+
+    first_grade = grade_index % 3 + 1
+    second_grade = (grade_index + 1) % 3 + 1
+
+    if _grade_class == first_grade:
+        ones_grade = 1
+    elif _grade_class == second_grade:
+        ones_grade = 2
+    else:
+        ones_grade = 3
+
+    return ones_grade
+
+def GradeClass2Grade():
+
+    grade_index = System.objects.get(id=0).grade_index
+
+    first_grade = grade_index % 3 + 1
+    second_grade = (grade_index + 1) % 3 + 1
+    third_grade = grade_index
+
+    return first_grade, second_grade, third_grade
