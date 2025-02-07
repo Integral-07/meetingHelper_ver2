@@ -51,6 +51,10 @@ if DEBUG:
 
     LINE_CHANNEL_ACCESS_TOKEN = env('LINE_CHANNEL_ACCESS_TOKEN')
 
+    SUPERUSER_NAME = env("SUPERUSER_NAME")
+    SUPERUSER_EMAIL = env("SUPERUSER_EMAIL")
+    SUPERUSER_PASSWORD = env("SUPERUSER_PASSWORD")
+
 
 # Application definition
 
@@ -63,11 +67,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "line_api",
     "access_site",
+    "app"
 
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    #'whitenoise.middleware.WhiteNoiseMiddleware', # 追加
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -149,6 +155,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+#STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -157,3 +165,4 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
