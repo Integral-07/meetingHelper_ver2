@@ -1,0 +1,40 @@
+{% extends 'access_site/base.html' %}
+
+{% block content %}
+  <div class="container mx-auto p-4">
+    <h2 class="text-3xl font-semibold mb-4">メンバー一覧</h2>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+        <thead>
+          <tr class="bg-gray-200 text-gray-700">
+            <th class="px-4 py-2 border">ID</th>
+            <th class="px-4 py-2 border">名前</th>
+            <th class="px-4 py-2 border">学年</th>
+            <th class="px-4 py-2 border">編集</th>
+            <th class="px-4 py-2 border">削除</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in members %}
+          <tr class="text-center border-b hover:bg-gray-100">
+            <td class="px-4 py-2 border">{{ member.user_id }}</td>
+            <td class="px-4 py-2 border">{{ member.name }}</td>
+            <td class="px-4 py-2 border">{{ member.grade_class }}</td>
+            <td class="px-4 py-2 border">
+              <a href="{% url 'member_edit' member.user_id %}" class="text-blue-500 hover:underline">編集</a>
+            </td>
+            <td class="px-4 py-2 border">
+              <a href="{% url 'member_delete' member.user_id %}" class="text-red-500 hover:underline">削除</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center p-4 text-gray-500">メンバーが登録されていません。</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

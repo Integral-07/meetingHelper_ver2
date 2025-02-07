@@ -4,7 +4,12 @@ from django.http import JsonResponse
 import secrets
 import urllib.parse
 from django.conf import settings
-from django.shortcuts import redirect
+from django.shortcuts import redirect,  get_object_or_404
+from django.contrib.auth.decorators import login_required
+from line_api.models import Member, System
+from line_api.util.message_handle_supporter import identifyGrade, GradeClass2Grade
+from .forms import MemberEditForm
+from linebot import LineBotApi
 
 def index(request):
 
@@ -63,3 +68,76 @@ def line_callback(request):
 def signup(request):
 
     return render(request, "access_site/signup.html")
+
+#@login_required(login_url="/meeting_helper_access_site/login/")
+def member_list(request):
+
+    members = Member.objects.all()
+
+    first_grade, second_grade, third_grade = GradeClass2Grade()
+
+    params = {
+
+        "members" : members,
+    }
+
+    return render(request, "access_site/users.html", params)
+
+def member_edit(request, member_id):
+    member = get_object_or_404(Member, user_id=member_id)
+    
+    if request.method == 'POST':
+        form = MemberEditForm(request.POST, instance=member)
+        if form.is_valid():
+            #form.save()
+            updated_member = Member(user_id=member.user_id, name=form.cleaned_data['name'], grade_class=form.cleaned_data['grade_class'], absent_flag=member.absent_flag, groupsep_flag=member.groupsep_flag, absent_reason=member.absent_reason)
+            updated_member.save()
+            return redirect('member_list')  # メンバー一覧ページにリダイレクト
+    else:
+        form = MemberEditForm(instance=member)
+
+        first_grade, second_grade, third_grade = GradeClass2Grade()
+
+        params = {
+
+            "form": form,
+            "member": member,
+            "first_grade_class": first_grade,
+            "second_grade_class": second_grade,
+            "third_grade_class": third_grade
+        }
+
+        return render(request, 'access_site/member_edit.html', params)
+
+
+def member_delete(request, member_id):
+
+    if request.method == 'POST':
+        
+        will_delete_member = get_object_or_404(Member, user_id=member_id)
+        will_delete_member.delete()
+
+        return redirect('member_list')  # メンバー一覧ページにリダイレクト
+    else:
+
+        member = Member.objects.get(user_id=member_id)
+
+        try:
+            line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
+            profile = line_bot_api.get_profile(member_id)
+            nick_name = profile.display_name #-> 表示名
+        except:
+            nick_name = "不明"
+            
+
+        grade = identifyGrade(member.grade_class)
+        
+
+        params = {
+
+            "grade": grade,
+            "member": member,
+            "nick_name": nick_name,
+        }
+    
+    return render(request, "access_site/member_delete.html", params)

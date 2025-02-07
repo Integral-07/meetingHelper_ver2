@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "line_api",
     "access_site",
-    "app"
+    "app",
+    'widget_tweaks',
 
 ]
 

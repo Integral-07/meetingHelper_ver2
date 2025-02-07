@@ -2,9 +2,15 @@ from django.db import models
 
 class Member(models.Model):
 
+    GRADE_CHOICES = [
+        ('GradeClass1', 'GradeClass1'),
+        ('GradeClass2', 'GradeClass2'),
+        ('GradeClass3', 'GradeClass3'),
+    ]
+
     user_id = models.CharField(primary_key=True, max_length=100, verbose_name="ユーザID(LINEID)")
     name = models.CharField(default="", max_length=100, verbose_name="名前")
-    grade_class = models.CharField(default="", max_length=100, verbose_name="学年区分")
+    grade_class = models.CharField(default="", max_length=100, verbose_name="学年区分", choices=GRADE_CHOICES)
     absent_flag = models.IntegerField(default=0, verbose_name="欠席連絡フラグ")
     groupsep_flag = models.IntegerField(default=0, verbose_name="グループ分けフラグ")
 
