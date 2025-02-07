@@ -55,8 +55,14 @@ if DEBUG:
     SUPERUSER_EMAIL = env("SUPERUSER_EMAIL")
     SUPERUSER_PASSWORD = env("SUPERUSER_PASSWORD")
 
+    LINE_CHANNEL_ID = env("LINE_CHANNEL_ID")
+
 
 # Application definition
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://538a-2400-4051-6743-c500-a4e0-4a1-9b3e-ec87.ngrok-free.app/"
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -68,7 +74,6 @@ INSTALLED_APPS = [
     "line_api",
     "access_site",
     "app",
-    'widget_tweaks',
 
 ]
 

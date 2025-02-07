@@ -1,5 +1,4 @@
 {% extends 'access_site/base.html' %}
-{% load widget_tweaks %}
 
 {% block content %}
     
@@ -13,7 +12,7 @@
     }
     </style>
 
-  <div class="container mx-auto p-4">
+  <div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10">
     <h2 class="text-3xl font-semibold mb-4">メンバー編集</h2>
 
     <form method="post"  class="flex-col bg-white p-6 shadow-md rounded-lg">
@@ -21,7 +20,21 @@
     
       <div class="mb-4 flex flex-col">
         <label class="justify-center text-gray-700">ID(readonly):</label>
-        {{ form.user_id }} 
+        <div class="input-border">
+          {{ member.user_id }} 
+        </div>
+      </div>
+
+      <div class="mb-4 flex flex-col">
+        <label class="justify-center text-gray-700">LINEの名前(readonly):</label>
+        <div class="input-border">
+          {{ nick_name }} 
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="justify-center text-gray-700">学年(1年生=GradeClass{{ first_grade_class }} / 2年生=GradeClass{{ second_grade_class }} / 3年生=GradeClass{{ third_grade_class }}):</label>
+        {{ form.grade_class }}
       </div>
 
       <div class="mb-4">
@@ -29,10 +42,10 @@
         {{ form.name }} 
       </div>
 
-      <div class="mb-4">
-        <label class="justify-center text-gray-700">学年(1年生=GradeClass{{ first_grade_class }} / 2年生=GradeClass{{ second_grade_class }} / 3年生=GradeClass{{ third_grade_class }}):</label>
-        {{ form.grade_class }}
+      <div class="mb-4 text-red-500">
+        {{ error }} 
       </div>
+      
 
       <!-- Center the button -->
       <div class="flex justify-center">

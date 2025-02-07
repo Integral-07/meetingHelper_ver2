@@ -1,74 +1,49 @@
+{% extends 'access_site/base.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ログイン - 部会ヘルパー</title>
-  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+{% block content %}
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const loginBtn = document.getElementById("line-login-btn");
-      const normalSrc = loginBtn.src;
-      const hoverSrc = "{% static 'access_site/img/line_login_hover.png' %}";
-      const ClickSrc = "{% static 'access_site/img/line_login_press.png' %}";
-  
-      loginBtn.addEventListener("mouseenter", function () {
-        loginBtn.src = hoverSrc;
-      });
-  
-      loginBtn.addEventListener("mouseleave", function () {
-        loginBtn.src = normalSrc;
-      });
-
-      loginLink.addEventListener("click", function () {
-        loginBtn.src = clickSrc; // クリック時の画像に変更
-      });
-    });
-  </script>
-</head>
-<body class="bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center min-h-screen">
-
-  <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full">
-    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">ログイン</h2>
-    
-    <form method="POST">
-      {% csrf_token %}
+  <!-- メインコンテンツ -->
+  <main class="flex-grow flex items-center justify-center mt-20">
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full">
+      <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">ログイン</h2>
       
-      <div class="mb-4">
-        <label for="username" class="block text-gray-700 font-medium">ユーザー名</label>
-        <input type="text" id="username" name="username" required
-          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
+      <form method="POST">
+        {% csrf_token %}
+        
+        <div class="mb-4">
+          <label for="username" class="block text-gray-700 font-medium">ユーザー名</label>
+          <input type="text" id="username" name="username" required
+            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
 
-      <div class="mb-6">
-        <label for="password" class="block text-gray-700 font-medium">パスワード</label>
-        <input type="password" id="password" name="password" required
-          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
+        <div class="mb-6">
+          <label for="password" class="block text-gray-700 font-medium">パスワード</label>
+          <input type="password" id="password" name="password" required
+            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
 
-      <button type="submit"
-        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
-        ログイン
-      </button>
+        <button type="submit"
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
+          ログイン
+        </button>
 
-      <div class="w-full border-t border-gray-300 my-6"></div>
+        <div class="w-full border-t border-gray-300 my-6"></div>
 
-      <div class="flex items-center justify-center mt-5">
-        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&state=YOUR_RANDOM_STATE&scope=profile%20openid&nonce=YOUR_RANDOM_NONCE">
-          <img id="line-login-btn" src="{% static 'access_site/img/line_login_base.png' %}" 
-               alt="LINEでログイン" class="w-30">
-        </a>
-      </div>
-    </form>
+        <div class="flex items-center justify-center mt-5">
+          <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&state=YOUR_RANDOM_STATE&scope=profile%20openid&nonce=YOUR_RANDOM_NONCE">
+            <img id="line-login-btn" src="{% static 'access_site/img/line_login_base.png' %}" 
+                 alt="LINEでログイン" class="w-30">
+          </a>
+        </div>
+      </form>
 
-    <p class="text-sm text-center text-gray-600 mt-4">
-      ログインできませんか？ 
-      <a href="{% url 'signup' %}" class="text-blue-500 hover:underline">新規登録</a>
-    </p>
-  </div>
+      <p class="text-sm text-center text-gray-600 mt-4">
+        ログインできませんか？ 
+        <a href="{% url 'signup' %}" class="text-blue-500 hover:underline">新規登録</a>
+      </p>
+    </div>
+  </main>
 
-</body>
-</html>
+{% endblock %}

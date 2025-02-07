@@ -1,26 +1,33 @@
 {% extends 'access_site/base.html' %}
 
 {% block content %}
-  <div class="container mx-auto p-4">
-    <h2 class="text-3xl font-semibold mb-4">メンバー一覧</h2>
+  <div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10 mb-10">
+    <h2 class="text-3xl font-semibold mb-5">メンバ一覧</h2>
 
     <div class="overflow-x-auto">
       <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
         <thead>
           <tr class="bg-gray-200 text-gray-700">
-            <th class="px-4 py-2 border">ID</th>
-            <th class="px-4 py-2 border">名前</th>
             <th class="px-4 py-2 border">学年</th>
+            <th class="px-4 py-2 border">LINEの名前</th>
+            <th class="px-4 py-2 border">名前</th>
             <th class="px-4 py-2 border">編集</th>
             <th class="px-4 py-2 border">削除</th>
           </tr>
         </thead>
         <tbody>
-          {% for member in members %}
+          {% for member, nick_name in member_info %}
           <tr class="text-center border-b hover:bg-gray-100">
-            <td class="px-4 py-2 border">{{ member.user_id }}</td>
+            {% if member.grade_class == first_grade_class %}
+            <td class="px-4 py-2 border">1年生</td>
+            {% elif member.grade_class == second_grade_class %}
+            <td class="px-4 py-2 border">2年生</td>
+            {% elif member.grade_class == third_grade_class %}
+            <td class="px-4 py-2 border">3年生</td>
+            {% endif %}
+            <td class="px-4 py-2 border">{{ nick_name }}</td>
             <td class="px-4 py-2 border">{{ member.name }}</td>
-            <td class="px-4 py-2 border">{{ member.grade_class }}</td>
+
             <td class="px-4 py-2 border">
               <a href="{% url 'member_edit' member.user_id %}" class="text-blue-500 hover:underline">編集</a>
             </td>
