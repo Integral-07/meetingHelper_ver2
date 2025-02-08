@@ -12,8 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-from decouple import config
-from dj_database_url import parse as dburl
+import  dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -142,7 +141,7 @@ DATABASES = {
         'PORT': '5432',
     }
     """
-    "default": config("DATABASE_URL", default=default_dburl, cast=dburl),
+    "default": {'default': dj_database_url.config(default=default_dburl)}
 
 }
 
