@@ -24,14 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-+u-m=rpl6xc4@6gwe042z+qqcde@h57cuoepby_bw*#7u+4%u%"
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', '.ngrok-free.app','.onrender.com']
 
-
+"""
 if DEBUG:
     import environ
     # instanceを作成
@@ -57,20 +57,21 @@ if DEBUG:
     SUPERUSER_PASSWORD = env("SUPERUSER_PASSWORD")
 
     LINE_CHANNEL_ID = env("LINE_CHANNEL_ID")
+"""
 
-else:
-    SUPABASE_DB_NAME = os.getenv('SUPABASE_DB_NAME')
-    SUPABASE_DB_USER = os.getenv('SUPABASE_DB_USER')
-    SUPABASE_DB_PASSWORD = os.getenv('SUPABASE_DB_PASSWORD')
-    SUPABASE_DB_HOST = os.getenv('SUPABASE_DB_HOST')
 
-    LINE_CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
+SUPABASE_DB_NAME = os.getenv('SUPABASE_DB_NAME')
+SUPABASE_DB_USER = os.getenv('SUPABASE_DB_USER')
+SUPABASE_DB_PASSWORD = os.getenv('SUPABASE_DB_PASSWORD')
+SUPABASE_DB_HOST = os.getenv('SUPABASE_DB_HOST')
 
-    SUPERUSER_NAME = os.getenv("SUPERUSER_NAME")
-    SUPERUSER_EMAIL = os.getenv("SUPERUSER_EMAIL")
-    SUPERUSER_PASSWORD = os.getenv("SUPERUSER_PASSWORD")
+LINE_CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
 
-    LINE_CHANNEL_ID = os.getenv("LINE_CHANNEL_ID")
+SUPERUSER_NAME = os.getenv("SUPERUSER_NAME")
+SUPERUSER_EMAIL = os.getenv("SUPERUSER_EMAIL")
+SUPERUSER_PASSWORD = os.getenv("SUPERUSER_PASSWORD")
+
+LINE_CHANNEL_ID = os.getenv("LINE_CHANNEL_ID")
 
 
 # Application definition
@@ -129,9 +130,9 @@ WSGI_APPLICATION = "meetingHelper.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-default_dburl = "sqlite:///" + os.path.join(BASE_DIR / "db.sqlite3")
+
 DATABASES = {
-    """
+
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         'NAME': SUPABASE_DB_NAME,
@@ -140,8 +141,6 @@ DATABASES = {
         'HOST': SUPABASE_DB_HOST,
         'PORT': '5432',
     }
-    """
-    "default": {'default': dj_database_url.config(default=default_dburl)}
 
 }
 
@@ -170,9 +169,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ja"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Tokyo"
 
 USE_I18N = True
 
