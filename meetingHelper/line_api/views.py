@@ -183,7 +183,7 @@ def message_handler(request):
 
                             return HttpResponse(status=200)
 
-                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="RG")
+                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="RG", meeting_DayOfWeek=system.meeting_DayOfWeek)
                         updated_system.save()
 
                         reply_messages = [
@@ -220,7 +220,7 @@ def message_handler(request):
 
                         else:
 
-                            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="NULL")
+                            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="NULL", meeting_DayOfWeek=system.meeting_DayOfWeek)
                             updated_system.save()
 
                             reply_messages = [{"type": "text", "text": "世代交代をキャンセルしました"}]
@@ -230,7 +230,7 @@ def message_handler(request):
                         
                         access_code = random.randint(1000, 9999)
 
-                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register=str(access_code))
+                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register=str(access_code), meeting_DayOfWeek=system.meeting_DayOfWeek)
                         updated_system.save()
 
                         reply_messages = [{"type": "text", "text": f"委員長を交代するには以下の認証コードを次期委員長が部会ヘルパーに送信してください\n認証コードを(現委員長)->(次期委員長)->(部会ヘルパ)に送信します\n\n認証コード: {access_code}"}]
@@ -245,7 +245,7 @@ def message_handler(request):
                 #委員長交代承認フェーズ
                 if message_text == system.flag_register and message_text.isdigit():
 
-                    updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=member.user_id ,flag_register="NULL")
+                    updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=member.user_id ,flag_register="NULL", meeting_DayOfWeek=system.meeting_DayOfWeek)
                     updated_system.save()
 
                     reply_messages = [{"type": "text", "text": "委員長を交代しました\n前期委員長に交代が完了したことを伝えてください"}]
