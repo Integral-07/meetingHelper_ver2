@@ -5,5 +5,4 @@ RUN pip install -r requirements.lock && \
     apt-get update && \
     apt-get install -y fonts-noto-cjk fontconfig && \
     fc-cache -fv && \
-    apt-get clean && \
-    apt-get install -y nodejs npm && \
+    apt-get clean

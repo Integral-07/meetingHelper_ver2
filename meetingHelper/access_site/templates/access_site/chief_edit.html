@@ -1,0 +1,65 @@
+{% extends 'access_site/base.html' %}
+
+{% block content %}
+    
+    <style>
+        .input-border {
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    </style>
+
+  <div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10">
+    <h2 class="text-3xl font-semibold mb-4">委員長権限の移行</h2>
+
+    <form method="post"  class="flex-col bg-white p-6 shadow-md rounded-lg">
+      {% csrf_token %}
+
+      <div class="mb-4 flex flex-col">
+        <label class="justify-center text-gray-700">現在の委員長権限の所在</label>
+        <div class="input-border">
+          {{ chief_name }} ( {{ chief_nickname }} )
+        </div>
+      </div>
+
+      <div class="mb-4 text-red-500">
+        {{ error }} 
+      </div>
+
+      <fieldset class="input-border">
+          <legend>+ 委員長権限移行先の候補 +</legend>
+          {% for member in members %}
+          <label><input type="radio" name="next_chief", value="{{ member.user_id }}" />
+              (
+                {% if member.grade_class == first_grade_class %}
+                    <td class="px-4 py-2 border">1年生</td>
+                {% elif member.grade_class == second_grade_class %}
+                    <td class="px-4 py-2 border">2年生</td>
+                {% elif member.grade_class == third_grade_class %}
+                    <td class="px-4 py-2 border">3年生</td>
+                {% endif %}
+              ) {{ member.name }} [ {{ member.user_id }} ] 
+          </label></br>
+          {% empty %}
+          <label>
+            <p>候補がありません</p>
+          </label>
+
+          {% endfor %}
+      </fieldset>
+      
+
+      <!-- Center the button -->
+      <div class="flex justify-center mt-10">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          移行
+        </button>
+
+        <a href="{% url 'dash_board' %}" class="ml-20 bg-green-400 text-white px-4 py-2 rounded hover:bg-blue-400">キャンセル</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

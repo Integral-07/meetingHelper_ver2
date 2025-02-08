@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from line_api.models import Member, System
 from line_api.util.message_handle_supporter import identifyGrade, GradeClass2Grade
-from .forms import MemberEditForm
+from .forms import MemberEditForm, ScheduleEditForm, ChiefEditForm
 from linebot import LineBotApi
 
 def index(request):
@@ -24,7 +24,7 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('/meeting_helper_access_site/member_list/')  # ログイン後のリダイレクト先
+            return redirect('/meeting_helper_access_site/dash_board/')  # ログイン後のリダイレクト先
         else:
             # 認証失敗時の処理
             return render(request, 'access_site/login.html', {'error': 'Invalid UserName or Password.'})
@@ -82,7 +82,7 @@ def signup(request):
     return render(request, "access_site/signup.html")
 
 @login_required(login_url="/meeting_helper_access_site/login/")
-def member_list(request):
+def dash_board(request):
 
 
     members = Member.objects.all().order_by("-grade_class")
@@ -100,12 +100,15 @@ def member_list(request):
 
     first_grade, second_grade, third_grade = GradeClass2Grade()
 
+    day_of_week = System.objects.get(id=0).meeting_DayOfWeek
+
     params = {
 
         "first_grade_class": "GradeClass" + str(first_grade),
         "second_grade_class": "GradeClass" + str(second_grade),
         "third_grade_class": "GradeClass" + str(third_grade),
-        "member_info": zip(members, nickname_list)
+        "member_info": zip(members, nickname_list),
+        "day_of_week": day_of_week
     }
 
     return render(request, "access_site/users.html", params)
@@ -120,7 +123,7 @@ def member_edit(request, member_id):
             #form.save()
             updated_member = Member(user_id=member.user_id, name=form.cleaned_data['name'], grade_class=form.cleaned_data['grade_class'], absent_flag=member.absent_flag, groupsep_flag=member.groupsep_flag, absent_reason=member.absent_reason)
             updated_member.save()
-            return redirect('member_list')  # メンバー一覧ページにリダイレクト
+            return redirect('dash_board') 
         else:
             form = MemberEditForm(instance=member)
 
@@ -174,15 +177,37 @@ def member_edit(request, member_id):
 @login_required(login_url="/meeting_helper_access_site/login/")
 def member_delete(request, member_id):
 
+    member = Member.objects.get(user_id=member_id)
     if request.method == 'POST':
+        
+        chief_id = System.objects.get(id=0).chief_id
+        if chief_id == member_id:
+
+            try:
+                line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
+                profile = line_bot_api.get_profile(member_id)
+                nick_name = profile.display_name #-> 表示名
+            except:
+                nick_name = "不明"
+            
+
+            grade = identifyGrade(member.grade_class)
+
+            params = {
+
+                "grade": grade,
+                "member": member,
+                "nick_name": nick_name,
+                "error": "委員長は削除できません"
+            }
+
+            return render(request, "access_site/member_delete.html", params)
         
         will_delete_member = get_object_or_404(Member, user_id=member_id)
         will_delete_member.delete()
 
-        return redirect('member_list')  # メンバー一覧ページにリダイレクト
+        return redirect('dash_board') 
     else:
-
-        member = Member.objects.get(user_id=member_id)
 
         try:
             line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
@@ -193,7 +218,6 @@ def member_delete(request, member_id):
             
 
         grade = identifyGrade(member.grade_class)
-        
 
         params = {
 
@@ -203,3 +227,71 @@ def member_delete(request, member_id):
         }
     
     return render(request, "access_site/member_delete.html", params)
+
+@login_required(login_url="/meeting_helper_access_site/login/")
+def schedule_edit(request):
+
+    system = System.objects.get(id=0)
+    if request.method == 'POST':
+
+        form = ScheduleEditForm(request.POST, instance=system)
+        if form.is_valid():
+            
+            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id, flag_register=system.flag_register, meeting_DayOfWeek=form.cleaned_data['schedule'])
+            updated_system.save()
+            
+            return redirect('dash_board') 
+        else:
+
+            form = ScheduleEditForm(instance=system)
+            params = {
+                "form": form,
+                "error": "Error occured during updating data"
+            }
+
+    else:
+        form = ScheduleEditForm(instance=system)
+        params = {
+
+            "form": form
+        }
+
+    return render(request, "access_site/schedule_edit.html", params)
+
+def chief_edit(request):
+
+    system = System.objects.get(id=0)
+    chief = get_object_or_404(Member, user_id=system.chief_id)
+    first_grade, second_grade, third_grade = GradeClass2Grade()
+    if request.method == 'POST':
+        
+        selected_option = request.POST.get('next_chief')
+        if selected_option:
+
+            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=selected_option, flag_register=system.flag_register, meeting_DayOfWeek=system.meeting_DayOfWeek)
+            updated_system.save()
+
+            return redirect('dash_board') 
+
+    
+    chief_name = chief.name
+    try:
+        line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
+        profile = line_bot_api.get_profile(system.chief_id)
+        chief_nickname = profile.display_name #-> 表示名
+    except:
+        chief_nickname = "不明"
+
+    members = Member.objects.all().order_by("-grade_class")
+    params = {
+
+        "chief_name": chief_name,
+        "chief_nickname": chief_nickname,
+        "members": members,
+        "first_grade_class": "GradeClass" + str(first_grade),
+        "second_grade_class": "GradeClass" + str(second_grade),
+        "third_grade_class": "GradeClass" + str(third_grade)
+    }
+    
+    return render(request, "access_site/chief_edit.html", params)
+    

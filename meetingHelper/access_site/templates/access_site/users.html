@@ -1,16 +1,81 @@
 {% extends 'access_site/base.html' %}
 
 {% block content %}
+
+<div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10 mb-10">
+  <h2 class="text-3xl font-semibold mb-5">部会開催日</h2>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+      <thead>
+        <tr class="bg-gray-200 text-gray-700">
+          <th class="px-4 py-2 border">現在の開催日</th>
+          <th class="px-4 py-2 border">変更</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="text-center border-b hover:bg-gray-100">
+          {% if day_of_week == "mon" %}
+            <td class="px-4 py-2 border">月曜日</td>
+          {% elif day_of_week == "tue" %}
+            <td class="px-4 py-2 border">火曜日</td>
+          {% elif day_of_week == "wed" %}
+            <td class="px-4 py-2 border">水曜日</td>
+          {% elif day_of_week == "thu" %}
+            <td class="px-4 py-2 border">木曜日</td>
+          {% elif day_of_week == "fri" %}
+            <td class="px-4 py-2 border">金曜日</td>
+          {% elif day_of_week == "sat" %}
+            <td class="px-4 py-2 border">土曜日</td>
+          {% elif day_of_week == "sun" %}
+            <td class="px-4 py-2 border">日曜日</td>
+          {% endif %}
+
+
+          <td class="px-4 py-2 border">
+            <a href="{% url 'schedule_edit' %}" class="text-blue-500 hover:underline">変更</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10 mb-10">
+  <h2 class="text-3xl font-semibold mb-5">委員長</h2>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+      <thead>
+        <tr class="bg-gray-200 text-gray-700">
+          <th class="px-4 py-2 border">現在の委員長権限保持者</th>
+          <th class="px-4 py-2 border">変更</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="text-center border-b hover:bg-gray-100">
+          
+            <td class="px-4 py-2 border">{{ chief_name }}( {{ chief_nickname }} )</td>
+
+          <td class="px-4 py-2 border">
+            <a href="{% url 'chief_edit' %}" class="text-blue-500 hover:underline">変更</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
   <div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10 mb-10">
-    <h2 class="text-3xl font-semibold mb-5">メンバ一覧</h2>
+    <h2 class="text-3xl font-semibold mb-5">メンバー一覧</h2>
 
     <div class="overflow-x-auto">
       <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
         <thead>
           <tr class="bg-gray-200 text-gray-700">
             <th class="px-4 py-2 border">学年</th>
-            <th class="px-4 py-2 border">LINEの名前</th>
             <th class="px-4 py-2 border">名前</th>
+            <th class="px-4 py-2 border">LINEの名前</th>
             <th class="px-4 py-2 border">編集</th>
             <th class="px-4 py-2 border">削除</th>
           </tr>
@@ -25,8 +90,8 @@
             {% elif member.grade_class == third_grade_class %}
             <td class="px-4 py-2 border">3年生</td>
             {% endif %}
-            <td class="px-4 py-2 border">{{ nick_name }}</td>
             <td class="px-4 py-2 border">{{ member.name }}</td>
+            <td class="px-4 py-2 border">{{ nick_name }}</td>
 
             <td class="px-4 py-2 border">
               <a href="{% url 'member_edit' member.user_id %}" class="text-blue-500 hover:underline">編集</a>
