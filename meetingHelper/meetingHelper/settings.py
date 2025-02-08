@@ -57,11 +57,26 @@ if DEBUG:
 
     LINE_CHANNEL_ID = env("LINE_CHANNEL_ID")
 
+else:
+    SUPABASE_DB_NAME = os.env('SUPABASE_DB_NAME')
+    SUPABASE_DB_USER = os.env('SUPABASE_DB_USER')
+    SUPABASE_DB_PASSWORD = os.env('SUPABASE_DB_PASSWORD')
+    SUPABASE_DB_HOST = os.env('SUPABASE_DB_HOST')
+
+    LINE_CHANNEL_ACCESS_TOKEN = os.env('LINE_CHANNEL_ACCESS_TOKEN')
+
+    SUPERUSER_NAME = os.env("SUPERUSER_NAME")
+    SUPERUSER_EMAIL = os.env("SUPERUSER_EMAIL")
+    SUPERUSER_PASSWORD = os.env("SUPERUSER_PASSWORD")
+
+    LINE_CHANNEL_ID = os.env("LINE_CHANNEL_ID")
+
 
 # Application definition
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://538a-2400-4051-6743-c500-a4e0-4a1-9b3e-ec87.ngrok-free.app/"
+    "https://538a-2400-4051-6743-c500-a4e0-4a1-9b3e-ec87.ngrok-free.app/",
+    "https://meetinghelper-ver2.onrender.com/"
 ]
 
 INSTALLED_APPS = [
