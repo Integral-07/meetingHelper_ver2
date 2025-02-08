@@ -102,13 +102,24 @@ def dash_board(request):
 
     day_of_week = System.objects.get(id=0).meeting_DayOfWeek
 
+    chief_id = System.objects.get(id=0).chief_id
+    chief_name = Member.objects.get(user_id=chief_id).name
+    try:
+        line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
+        profile = line_bot_api.get_profile(chief_id)
+        chief_nickname = profile.display_name #-> 表示名
+    except:
+        chief_nickname = "不明"
+
     params = {
 
         "first_grade_class": "GradeClass" + str(first_grade),
         "second_grade_class": "GradeClass" + str(second_grade),
         "third_grade_class": "GradeClass" + str(third_grade),
         "member_info": zip(members, nickname_list),
-        "day_of_week": day_of_week
+        "day_of_week": day_of_week,
+        "chief_name": chief_name,
+        "chief_nickname": chief_nickname
     }
 
     return render(request, "access_site/users.html", params)
