@@ -1,0 +1,9 @@
+Django==4.2.0
+line-bot-sdk==3.14.2
+psycopg2==2.9.10
+Pillow==11.1.0
+django-sslserver==0.22
+django-environ==0.12.0
+django-tailwind==3.8.0
+whitenoise==6.9.0
+apscheduler==3.11.0
