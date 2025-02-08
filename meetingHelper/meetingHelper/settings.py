@@ -132,16 +132,18 @@ WSGI_APPLICATION = "meetingHelper.wsgi.application"
 
 
 DATABASES = {
-
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': SUPABASE_DB_NAME,
         'USER': SUPABASE_DB_USER,
         'PASSWORD': SUPABASE_DB_PASSWORD,
         'HOST': SUPABASE_DB_HOST,
-        'PORT': '5432',
+        'PORT': '6543',  # トランザクションモード用のポート
+        'OPTIONS': {
+            'options': '-c use_prepared_statements=0',
+        },
+        'DISABLE_SERVER_SIDE_CURSORS': True,  # サーバーサイドカーソルを無効化
     }
-
 }
 
 
