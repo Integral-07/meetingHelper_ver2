@@ -31,6 +31,6 @@ def start():
         schedule_dayafter_index = 0
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(periodic_execution, 'cron', hour=23, day_of_week=day_of_weeks[schedule_dayafter_index])
-    scheduler.add_job(clear_authinfo_times, 'cron', hour=23)
+    scheduler.add_job(periodic_execution, 'cron', hour=1, day_of_week=day_of_weeks[schedule_dayafter_index])
+    scheduler.add_job(clear_authinfo_times, 'cron', hour=1)
     scheduler.start()
