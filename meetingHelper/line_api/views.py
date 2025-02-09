@@ -4,12 +4,15 @@ import random, json, urllib.request
 from .util.message_handle_supporter import *
 from .models import Member, System
 from django.conf import settings
+from django.shortcuts import redirect
+from django.contrib import messages
 
 def index(request):
 
     return HttpResponse("index")
 
 REPLY_ENDPOINT_URL = "https://api.line.me/v2/bot/message/reply"
+PUSH_ENDPOINT_URL = "https://api.line.me/v2/bot/message/push"
 HEADER = {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ' + str(settings.LINE_CHANNEL_ACCESS_TOKEN)
@@ -32,7 +35,7 @@ class LineMessage():
         }
 
         req = urllib.request.Request(REPLY_ENDPOINT_URL, json.dumps(body).encode(), HEADER)
-        print(body)
+
         try:
             with urllib.request.urlopen(req) as res:
                 body = res.read()
@@ -40,6 +43,44 @@ class LineMessage():
             print(err)
         except urllib.error.URLError as err:
             print(err.reason)
+
+def send_auth_info(request):
+
+    sending_times = System.objects.get(id=0).auth_info_times
+
+    if sending_times >= 2:
+
+        messages.error(request, 'リクエスト回数が１日の上限に達しました')
+        return redirect('/meeting_helper_access_site/login/')
+    
+    System.objects.all().update(auth_info_times=sending_times + 1)
+
+    chief_id = System.objects.get(id=0).chief_id
+
+    access_id = settings.USER_NAME
+    access_password = settings.USER_PASSWORD
+
+    body = {
+        "to": chief_id,
+        "messages": [
+            {
+                "type": "text",
+                "text": f"部会ヘルパーのアクセスサイトからIDとパスワードの送信要求がありました. 身に覚えがない場合は無視してください.\n\n[認証情報]\nID : {access_id}\nPassword : {access_password}"
+            }
+        ]
+    }
+
+    req = urllib.request.Request(PUSH_ENDPOINT_URL, json.dumps(body).encode(), HEADER)
+    try:
+        with urllib.request.urlopen(req) as res:
+            body = res.read()
+    except urllib.error.HTTPError as err:
+        print(err)
+    except urllib.error.URLError as err:
+        print(err.reason)
+
+    messages.error(request, '委員長のLINEに認証情報を送信しました')
+    return redirect("/meeting_helper_access_site/login/")
 
 @csrf_exempt
 def message_handler(request):
@@ -183,7 +224,7 @@ def message_handler(request):
 
                             return HttpResponse(status=200)
 
-                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="RG", meeting_DayOfWeek=system.meeting_DayOfWeek)
+                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="RG", meeting_DayOfWeek=system.meeting_DayOfWeek, auth_info_times=system.auth_info_times)
                         updated_system.save()
 
                         reply_messages = [
@@ -220,7 +261,7 @@ def message_handler(request):
 
                         else:
 
-                            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="NULL", meeting_DayOfWeek=system.meeting_DayOfWeek)
+                            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register="NULL", meeting_DayOfWeek=system.meeting_DayOfWeek, auth_info_times=system.auth_info_times)
                             updated_system.save()
 
                             reply_messages = [{"type": "text", "text": "世代交代をキャンセルしました"}]
@@ -230,7 +271,7 @@ def message_handler(request):
                         
                         access_code = random.randint(1000, 9999)
 
-                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register=str(access_code), meeting_DayOfWeek=system.meeting_DayOfWeek)
+                        updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id ,flag_register=str(access_code), meeting_DayOfWeek=system.meeting_DayOfWeek, auth_info_times=system.auth_info_times)
                         updated_system.save()
 
                         reply_messages = [{"type": "text", "text": f"委員長を交代するには以下の認証コードを次期委員長が部会ヘルパーに送信してください\n認証コードを(現委員長)->(次期委員長)->(部会ヘルパ)に送信します\n\n認証コード: {access_code}"}]
@@ -245,7 +286,7 @@ def message_handler(request):
                 #委員長交代承認フェーズ
                 if message_text == system.flag_register and message_text.isdigit():
 
-                    updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=member.user_id ,flag_register="NULL", meeting_DayOfWeek=system.meeting_DayOfWeek)
+                    updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=member.user_id ,flag_register="NULL", meeting_DayOfWeek=system.meeting_DayOfWeek, auth_info_times=system.auth_info_times)
                     updated_system.save()
 
                     reply_messages = [{"type": "text", "text": "委員長を交代しました\n前期委員長に交代が完了したことを伝えてください"}]

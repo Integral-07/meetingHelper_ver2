@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-+u-m=rpl6xc4@6gwe042z+qqcde@h57cuoepby_bw*#7u+4%u%
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.ngrok-free.app','.onrender.com']
 
@@ -70,6 +70,10 @@ LINE_CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
 SUPERUSER_NAME = os.getenv("SUPERUSER_NAME")
 SUPERUSER_EMAIL = os.getenv("SUPERUSER_EMAIL")
 SUPERUSER_PASSWORD = os.getenv("SUPERUSER_PASSWORD")
+
+USER_NAME = os.getenv("USER_NAME")
+USER_EMAIL = os.getenv("USER_EMAIL")
+USER_PASSWORD = os.getenv("USER_PASSWORD")
 
 LINE_CHANNEL_ID = os.getenv("LINE_CHANNEL_ID")
 
