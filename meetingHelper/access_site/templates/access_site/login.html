@@ -24,24 +24,32 @@
             class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
+        {% if messages %}
+          {% for message in messages %}
+            <div class="mb-4 text-red-500 mt-10">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+        
+        <div class="w-full border-t border-gray-300 my-6"></div>
         <button type="submit"
           class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
           ログイン
         </button>
 
-        <div class="w-full border-t border-gray-300 my-6"></div>
 
-        <div class="flex items-center justify-center mt-5">
-          <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&state=YOUR_RANDOM_STATE&scope=profile%20openid&nonce=YOUR_RANDOM_NONCE">
-            <img id="line-login-btn" src="{% static 'access_site/img/line_login_base.png' %}" 
-                 alt="LINEでログイン" class="w-30">
-          </a>
-        </div>
-      </form>
+<!--
+  <div class="flex items-center justify-center mt-5">
+    <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&state=YOUR_RANDOM_STATE&scope=profile%20openid&nonce=YOUR_RANDOM_NONCE">
+      <img id="line-login-btn" src="{% static 'access_site/img/line_login_base.png' %}" 
+      alt="LINEでログイン" class="w-30">
+    </a>
+  </div>
+</form>
+-->
 
       <p class="text-sm text-center text-gray-600 mt-4">
         ログインできませんか？ 
-        <a href="{% url 'signup' %}" class="text-blue-500 hover:underline">新規登録</a>
+        <a href="{% url 'send_to_chief' %}" class="text-blue-500 hover:underline">認証情報を送信する</a>
       </p>
     </div>
   </main>

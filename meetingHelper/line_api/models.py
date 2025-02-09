@@ -37,3 +37,5 @@ class System(models.Model):
     flag_register = models.CharField(default="NULL", max_length=100, verbose_name="フラグレジスタ")
 
     meeting_DayOfWeek = models.CharField(default="thu", max_length=10, verbose_name="部会の開催翌日の曜日", choices=DAY_OF_WEEKS)
+
+    auth_info_times = models.IntegerField(default=0, verbose_name="認証情報開示回数")

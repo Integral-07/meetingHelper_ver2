@@ -7,6 +7,7 @@ from django.conf import settings
 from django.shortcuts import redirect,  get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from line_api.models import Member, System
 from line_api.util.message_handle_supporter import identifyGrade, GradeClass2Grade
 from .forms import MemberEditForm, ScheduleEditForm, ChiefEditForm
@@ -27,7 +28,8 @@ def user_login(request):
             return redirect('/meeting_helper_access_site/dash_board/')  # ログイン後のリダイレクト先
         else:
             # 認証失敗時の処理
-            return render(request, 'access_site/login.html', {'error': 'Invalid UserName or Password.'})
+            messages.error(request, 'Invalid UserName or Password.')
+            return redirect("/meeting_helper_access_site/login/")
     else:
         return render(request, 'access_site/login.html', {'error': ''})
 
@@ -248,7 +250,7 @@ def schedule_edit(request):
         form = ScheduleEditForm(request.POST, instance=system)
         if form.is_valid():
             
-            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id, flag_register=system.flag_register, meeting_DayOfWeek=form.cleaned_data['schedule'])
+            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id, flag_register=system.flag_register, meeting_DayOfWeek=form.cleaned_data['schedule'], auth_info_times=system.auth_info_times)
             updated_system.save()
             
             return redirect('dash_board') 
@@ -279,7 +281,7 @@ def chief_edit(request):
         selected_option = request.POST.get('next_chief')
         if selected_option:
 
-            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=selected_option, flag_register=system.flag_register, meeting_DayOfWeek=system.meeting_DayOfWeek)
+            updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=selected_option, flag_register=system.flag_register, meeting_DayOfWeek=system.meeting_DayOfWeek, auth_info_times=system.auth_info_times)
             updated_system.save()
 
             return redirect('dash_board') 
@@ -305,4 +307,3 @@ def chief_edit(request):
     }
     
     return render(request, "access_site/chief_edit.html", params)
-    

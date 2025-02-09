@@ -14,3 +14,12 @@ class Command(BaseCommand):
                 password=settings.SUPERUSER_PASSWORD
             )
             print("スーパーユーザー作成")
+        
+        if not User.objects.filter(username=settings.USER_NAME).exists():
+            User.objects.create_user(
+                username=settings.USER_NAME,
+                email=settings.USER_EMAIL,
+                password=settings.USER_PASSWORD,
+                #is_staff=True
+            )
+            print('ユーザー作成')
