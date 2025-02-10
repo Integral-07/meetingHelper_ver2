@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-import  dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,18 +64,22 @@ SUPABASE_DB_USER = os.getenv('SUPABASE_DB_USER')
 SUPABASE_DB_PASSWORD = os.getenv('SUPABASE_DB_PASSWORD')
 SUPABASE_DB_HOST = os.getenv('SUPABASE_DB_HOST')
 
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_API_KEY = os.getenv('SUPABASE_API_KEY')
+
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
 
-SUPERUSER_NAME = os.getenv("SUPERUSER_NAME")
-SUPERUSER_EMAIL = os.getenv("SUPERUSER_EMAIL")
-SUPERUSER_PASSWORD = os.getenv("SUPERUSER_PASSWORD")
+SUPERUSER_NAME = os.getenv('SUPERUSER_NAME')
+SUPERUSER_EMAIL = os.getenv('SUPERUSER_EMAIL')
+SUPERUSER_PASSWORD = os.getenv('SUPERUSER_PASSWORD')
 
-USER_NAME = os.getenv("USER_NAME")
-USER_EMAIL = os.getenv("USER_EMAIL")
-USER_PASSWORD = os.getenv("USER_PASSWORD")
+USER_NAME = os.getenv('USER_NAME')
+USER_EMAIL = os.getenv('USER_EMAIL')
+USER_PASSWORD = os.getenv('USER_PASSWORD')
 
-LINE_CHANNEL_ID = os.getenv("LINE_CHANNEL_ID")
+LINE_CHANNEL_ID = os.getenv('LINE_CHANNEL_ID')
 
+print(SUPABASE_API_KEY)
 
 # Application definition
 

@@ -1,9 +1,10 @@
 from django.conf import settings
 import random
 from ..models import Member, System
+from supabase import create_client
 from PIL import Image, ImageDraw, ImageFont
-import os, datetime
-from io import BytesIO
+import os, datetime, time
+import io
 
 def isGradeclassFieldEmpty(_user_id):
 
@@ -83,10 +84,9 @@ def GenerateGroupImage(_num_groups, _groups):
     draw = ImageDraw.Draw(img)
 
     # フォントの設定（環境に応じてパスを変更）
-    try:
-        font = ImageFont.truetype(settings.FONT_PATH, 24)
-    except Exception as e:
-        print(f"font loading error: {e}")
+    
+    font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"  # Linux環境
+    font = ImageFont.truetype(font_path, 24)
 
     # 表の描画
     y_start = 10
@@ -127,11 +127,39 @@ def GenerateGroupImage(_num_groups, _groups):
 
     # 画像をサーバーに保存する
     file_path = os.path.join(settings.MEDIA_ROOT, image_path)
-
     img.save(file_path)
 
-    # URLを返す
-    return os.path.join(settings.MEDIA_URL, image_path)
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format="png")
+    img_bytes.seek(0)
+
+    img_bytes = img_bytes.getvalue() 
+    supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_API_KEY)
+    
+    try:
+        file_path = "public/group/group_table.png"
+
+        # ファイルの存在確認
+        existing_files = supabase.storage.from_('group_bucket').list(path="public/group")
+        for item in existing_files:
+            if item['name'] == "group_table.png":
+                supabase.storage.from_('group_bucket').remove(file_path)
+
+        # 新しいファイルのアップロード
+        supabase.storage.from_('group_bucket').upload(file_path, img_bytes)
+
+    except Exception as e:
+        print(f"アップロードエラー：{e}")
+
+    response = supabase.storage.from_('group_bucket').get_public_url("public/group/group_table.png")
+    if 'error' in response:
+        # エラーハンドリング
+        print('URL取得エラー:', response)
+        return None
+    
+    #print(response)
+
+    return response + str(time.time())
 
 def rotateGeneration():
 

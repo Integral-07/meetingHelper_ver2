@@ -404,7 +404,7 @@ def message_handler(request):
                     updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=1, absent_reason=member.absent_reason)
                     updated_member.save()
 
-                    attendance_members = Member.objects.filter(absent_reason="")
+                    attendance_members = Member.objects.filter(absent_reason="").order_by("-grade_class")
 
                     pre_reply_messages = ""
                     member_count = len(attendance_members)
@@ -436,8 +436,8 @@ def message_handler(request):
 
                             updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
                             updated_member.save()
-                            GenerateGroupImage(num_groups, groups)
-                            media_url = request_raw.build_absolute_uri('/media/group_table.png')
+                            media_url = GenerateGroupImage(num_groups, groups)
+                            #media_url = request_raw.build_absolute_uri('/media/group_table.png')
                             reply_messages = [
                                 {
                                     "type": "text", 
