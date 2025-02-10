@@ -83,8 +83,10 @@ def GenerateGroupImage(_num_groups, _groups):
     draw = ImageDraw.Draw(img)
 
     # フォントの設定（環境に応じてパスを変更）
-    font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"  # Linux環境
-    font = ImageFont.truetype(font_path, 24)
+    try:
+        font = ImageFont.truetype(settings.FONT_PATH, 24)
+    except Exception as e:
+        print(f"font loading error: {e}")
 
     # 表の描画
     y_start = 10
@@ -134,7 +136,6 @@ def GenerateGroupImage(_num_groups, _groups):
 def rotateGeneration():
 
     system = System.objects.get(id=0)
-    grade_index = system.grade_index
 
     cur_grade_index = system.grade_index
     Member.objects.filter(grade_class=f"GradeClass{cur_grade_index}").delete() #最高学年のメンバを削除する
