@@ -79,7 +79,6 @@ USER_PASSWORD = os.getenv('USER_PASSWORD')
 
 LINE_CHANNEL_ID = os.getenv('LINE_CHANNEL_ID')
 
-print(SUPABASE_API_KEY)
 
 # Application definition
 
