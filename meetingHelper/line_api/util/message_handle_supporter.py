@@ -1,5 +1,4 @@
 from django.conf import settings
-from meetingHelper.settings import supabase_client
 import random
 from ..models import Member, System
 from supabase import create_client
@@ -86,7 +85,7 @@ def GenerateGroupImage(_num_groups, _groups):
 
     # フォントの設定（環境に応じてパスを変更）
     
-    font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"  # Linux環境
+    font_path = "NotoSansCJK-Regular.ttc"  # Linux環境
     font = ImageFont.truetype(font_path, 24)
 
     # 表の描画
@@ -129,7 +128,7 @@ def GenerateGroupImage(_num_groups, _groups):
     # 画像をサーバーに保存する
     #file_path = os.path.join(settings.MEDIA_ROOT, image_path)
     #img.save(file_path)
-    supabase = supabase_client
+    supabase = create_client(settings.SUPABASE_DB_URL, settings.SUPABASE_DB_API_KEY)
 
     img_bytes = io.BytesIO()
     img.save(img_bytes, format="png")

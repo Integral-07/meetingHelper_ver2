@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-from supabase import create_client
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 #FONT_PATH = os.path.join(BASE_DIR, 'static', 'fonts', 'NotoSansCJK-Regular.ttc')
@@ -83,7 +83,6 @@ USER_PASSWORD = os.getenv('USER_PASSWORD')
 
 LINE_CHANNEL_ID = os.getenv('LINE_CHANNEL_ID')
 
-supabase_client = create_client(SUPABASE_DB_URL, SUPABASE_DB_API_KEY)
 # Application definition
 
 CSRF_TRUSTED_ORIGINS = [
