@@ -123,8 +123,6 @@ def GenerateGroupImage(_num_groups, _groups):
         y_line = y_start + header_height + i * row_height
         draw.line([(x_start, y_line), (width - 30, y_line)], fill=line_color, width=2)
 
-    image_path = "group_table.png"
-
     # 画像をサーバーに保存する
     #file_path = os.path.join(settings.MEDIA_ROOT, image_path)
     #img.save(file_path)
@@ -134,9 +132,7 @@ def GenerateGroupImage(_num_groups, _groups):
     img.save(img_bytes, format="png")
     img_bytes.seek(0)
 
-    img_bytes = img_bytes.getvalue() 
-    #print("URL", SUPABASE_URL)
-    #print("API", SUPABASE_API_KEY)
+    img_bytes = img_bytes.getvalue()
     
     try:
         file_path = "public/group/group_table.png"
@@ -158,8 +154,7 @@ def GenerateGroupImage(_num_groups, _groups):
         # エラーハンドリング
         print('URL取得エラー:', response)
         return None
-    
-    #print(response)
+
 
     return response + str(time.time())
 

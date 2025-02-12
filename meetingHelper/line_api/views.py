@@ -425,35 +425,35 @@ def message_handler(request):
                     num_member = Member.objects.filter(absent_reason="").count()
                     if message_text.isdigit() and int(message_text) <= num_member and int(message_text) != 0: #入力値が出席可能なメンバ数以下の整数ならば
 
-                        #try:
-                        #member_list = Member.objects.filter(absent_reason="")
-                        num_groups = int(message_text)
+                        try:
+                            #member_list = Member.objects.filter(absent_reason="")
+                            num_groups = int(message_text)
 
-                        groups = MakeGroups(num_groups)
+                            groups = MakeGroups(num_groups)
 
-                        #return_text = ""
-                        #for i, group in enumerate(groups, 1):
-                        #    return_text += f"グループ {i}: {[member.name for member in group]}" + "\n"
+                            #return_text = ""
+                            #for i, group in enumerate(groups, 1):
+                            #    return_text += f"グループ {i}: {[member.name for member in group]}" + "\n"
 
-                        updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
-                        updated_member.save()
-                        media_url = GenerateGroupImage(num_groups, groups)
-                        #media_url = request_raw.build_absolute_uri('/media/group_table.png')
-                        reply_messages = [
-                            {
-                                "type": "text", 
-                                "text": "グループを作成しました"
-                            },
-                            {
-                                "type": "image",
-                                "originalContentUrl": media_url,
-                                "previewImageUrl": media_url
-                            }
-                        ]
+                            updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
+                            updated_member.save()
+                            media_url = GenerateGroupImage(num_groups, groups)
+                            #media_url = request_raw.build_absolute_uri('/media/group_table.png')
+                            reply_messages = [
+                                {
+                                    "type": "text", 
+                                    "text": "グループを作成しました"
+                                },
+                                {
+                                    "type": "image",
+                                    "originalContentUrl": media_url,
+                                    "previewImageUrl": media_url
+                                }
+                            ]
 
-                        #except Exception as e:
-                        #    reply_messages = [{"type": "text", "text": "グループの作成に失敗しました"}]
-                        #    print(f"Error group making fail:{e}")
+                        except Exception as e:
+                            reply_messages = [{"type": "text", "text": f"グループの作成に失敗しました\n{e}"}]
+                            print(f"Error group making fail:{e}")
 
                     elif message_text == "キャンセル":
 
