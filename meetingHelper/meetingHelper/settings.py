@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-
+from supabase import create_client
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 #FONT_PATH = os.path.join(BASE_DIR, 'static', 'fonts', 'NotoSansCJK-Regular.ttc')
@@ -26,10 +26,11 @@ SECRET_KEY = "django-insecure-+u-m=rpl6xc4@6gwe042z+qqcde@h57cuoepby_bw*#7u+4%u%
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.ngrok-free.app','.onrender.com']
 
+"""
 
 if DEBUG:
     import environ
@@ -57,18 +58,18 @@ if DEBUG:
 
     LINE_CHANNEL_ID = env("LINE_CHANNEL_ID")
 
-    SUPABASE_URL = env('SUPABASE_URL')
-    SUPABASE_API_KEY = env('SUPABASE_API_KEY')
+    SUPABASE_DB_URL = env('SUPABASE_DB_URL')
+    SUPABASE_DB_API_KEY = env('SUPABASE_DB_API_KEY')
 
 
-
+"""
 SUPABASE_DB_NAME = os.getenv('SUPABASE_DB_NAME')
 SUPABASE_DB_USER = os.getenv('SUPABASE_DB_USER')
 SUPABASE_DB_PASSWORD = os.getenv('SUPABASE_DB_PASSWORD')
 SUPABASE_DB_HOST = os.getenv('SUPABASE_DB_HOST')
 
-SUPABASE_URL = os.getenv('SUPABASE_URL')
-SUPABASE_API_KEY = os.getenv('SUPABASE_API_KEY')
+SUPABASE_DB_URL = os.getenv('SUPABASE_URL')
+SUPABASE_DB_API_KEY = os.getenv('SUPABASE_API_KEY')
 
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
 
@@ -82,7 +83,7 @@ USER_PASSWORD = os.getenv('USER_PASSWORD')
 
 LINE_CHANNEL_ID = os.getenv('LINE_CHANNEL_ID')
 
-
+supabase_client = create_client(SUPABASE_DB_URL, SUPABASE_DB_API_KEY)
 # Application definition
 
 CSRF_TRUSTED_ORIGINS = [

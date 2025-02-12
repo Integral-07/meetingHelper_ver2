@@ -1,4 +1,5 @@
 from django.conf import settings
+from meetingHelper.settings import supabase_client
 import random
 from ..models import Member, System
 from supabase import create_client
@@ -128,6 +129,7 @@ def GenerateGroupImage(_num_groups, _groups):
     # 画像をサーバーに保存する
     #file_path = os.path.join(settings.MEDIA_ROOT, image_path)
     #img.save(file_path)
+    supabase = supabase_client
 
     img_bytes = io.BytesIO()
     img.save(img_bytes, format="png")
@@ -136,7 +138,6 @@ def GenerateGroupImage(_num_groups, _groups):
     img_bytes = img_bytes.getvalue() 
     #print("URL", SUPABASE_URL)
     #print("API", SUPABASE_API_KEY)
-    supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_API_KEY)
     
     try:
         file_path = "public/group/group_table.png"
