@@ -34,6 +34,7 @@ class LineMessage():
             'messages': self.messages
         }
 
+        print(body)
         req = urllib.request.Request(REPLY_ENDPOINT_URL, json.dumps(body).encode(), HEADER)
 
         try:

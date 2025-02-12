@@ -15,7 +15,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-FONT_PATH = os.path.join(BASE_DIR, 'static', 'fonts', 'NotoSansCJK-Regular.ttc')
+#FONT_PATH = os.path.join(BASE_DIR, 'static', 'fonts', 'NotoSansCJK-Regular.ttc')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -83,7 +83,7 @@ LINE_CHANNEL_ID = os.getenv('LINE_CHANNEL_ID')
 # Application definition
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://538a-2400-4051-6743-c500-a4e0-4a1-9b3e-ec87.ngrok-free.app/",
+    "https://5527-207-148-108-86.ngrok-free.app/",
     "https://meetinghelper-ver2.onrender.com/"
 ]
 
@@ -103,7 +103,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware', # 追加
+    #'whitenoise.middleware.WhiteNoiseMiddleware', # 追加
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",

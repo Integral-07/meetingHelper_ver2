@@ -1,4 +1,5 @@
 from django.conf import settings
+from meetingHelper.settings import SUPABASE_URL, SUPABASE_API_KEY
 import random
 from ..models import Member, System
 from supabase import create_client
@@ -134,7 +135,9 @@ def GenerateGroupImage(_num_groups, _groups):
     img_bytes.seek(0)
 
     img_bytes = img_bytes.getvalue() 
-    supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_API_KEY)
+    #print("URL", SUPABASE_URL)
+    #print("API", SUPABASE_API_KEY)
+    supabase = create_client(SUPABASE_URL, SUPABASE_API_KEY)
     
     try:
         file_path = "public/group/group_table.png"
