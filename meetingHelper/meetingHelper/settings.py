@@ -23,14 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-+u-m=rpl6xc4@6gwe042z+qqcde@h57cuoepby_bw*#7u+4%u%"
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', '.ngrok-free.app','.onrender.com']
 
-"""
+
 if DEBUG:
     import environ
     # instanceを作成
@@ -56,7 +56,10 @@ if DEBUG:
     SUPERUSER_PASSWORD = env("SUPERUSER_PASSWORD")
 
     LINE_CHANNEL_ID = env("LINE_CHANNEL_ID")
-"""
+
+    SUPABASE_URL = env('SUPABASE_URL')
+    SUPABASE_API_KEY = env('SUPABASE_API_KEY')
+
 
 
 SUPABASE_DB_NAME = os.getenv('SUPABASE_DB_NAME')
