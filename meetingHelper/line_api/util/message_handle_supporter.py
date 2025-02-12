@@ -126,8 +126,8 @@ def GenerateGroupImage(_num_groups, _groups):
     image_path = "group_table.png"
 
     # 画像をサーバーに保存する
-    file_path = os.path.join(settings.MEDIA_ROOT, image_path)
-    img.save(file_path)
+    #file_path = os.path.join(settings.MEDIA_ROOT, image_path)
+    #img.save(file_path)
 
     img_bytes = io.BytesIO()
     img.save(img_bytes, format="png")
