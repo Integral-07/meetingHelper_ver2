@@ -89,8 +89,6 @@ def message_handler(request):
 
     system = System.objects.get(id=0)
 
-    request_raw = request
-
     if request.method == 'POST':
 
         request = json.loads(request.body.decode('utf-8'))
@@ -98,7 +96,7 @@ def message_handler(request):
         event_type = event['type']
         line_id = event['source']['userId']
 
-        reply_messages = [{"type": "text", "text": "Siri> すみません、よくわかりません"}]
+        reply_messages = [{"type": "text", "text": "何のことかわからないよぉ～？\n\nhttps://www.dropbox.com/scl/fi/zooivgoghggkyttqxnp4c/_.pdf?rlkey=mifunwp2dcqe8ert48l279mfd&st=z86lgu57&dl=0"}]
 
         if event_type == 'follow':
 
@@ -467,6 +465,9 @@ def message_handler(request):
                         reply_messages = [{"type": "text", "text": f"グループ数が無効な値です\n出席可能なメンバ数以下の自然数を入力してください\n(現在の出席可能なメンバ:{num_member}人)"}]
 
 
+                if message_text == "説明書":
+
+                    reply_messages = [{"type": "text", "text": "https://www.dropbox.com/scl/fi/zooivgoghggkyttqxnp4c/_.pdf?rlkey=mifunwp2dcqe8ert48l279mfd&st=z86lgu57&dl=0"}]
 
         line_message = LineMessage(reply_messages)
         line_message.reply(event['replyToken'])
