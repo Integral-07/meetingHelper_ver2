@@ -34,6 +34,7 @@ class LineMessage():
             'messages': self.messages
         }
 
+        print(body)
         req = urllib.request.Request(REPLY_ENDPOINT_URL, json.dumps(body).encode(), HEADER)
 
         try:
@@ -451,7 +452,7 @@ def message_handler(request):
                             ]
 
                         except Exception as e:
-                            reply_messages = [{"type": "text", "text": "グループの作成に失敗しました"}]
+                            reply_messages = [{"type": "text", "text": f"グループの作成に失敗しました\n{e}"}]
                             print(f"Error group making fail:{e}")
 
                     elif message_text == "キャンセル":

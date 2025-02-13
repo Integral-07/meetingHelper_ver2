@@ -15,7 +15,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-FONT_PATH = os.path.join(BASE_DIR, 'static', 'fonts', 'NotoSansCJK-Regular.ttc')
+#FONT_PATH = os.path.join(BASE_DIR, 'static', 'fonts', 'NotoSansCJK-Regular.ttc')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -26,11 +26,12 @@ SECRET_KEY = "django-insecure-+u-m=rpl6xc4@6gwe042z+qqcde@h57cuoepby_bw*#7u+4%u%
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', '.ngrok-free.app','.onrender.com']
 
 """
+
 if DEBUG:
     import environ
     # instanceを作成
@@ -56,16 +57,19 @@ if DEBUG:
     SUPERUSER_PASSWORD = env("SUPERUSER_PASSWORD")
 
     LINE_CHANNEL_ID = env("LINE_CHANNEL_ID")
+
+    SUPABASE_DB_URL = env('SUPABASE_DB_URL')
+    SUPABASE_DB_API_KEY = env('SUPABASE_DB_API_KEY')
+
+
 """
-
-
 SUPABASE_DB_NAME = os.getenv('SUPABASE_DB_NAME')
 SUPABASE_DB_USER = os.getenv('SUPABASE_DB_USER')
 SUPABASE_DB_PASSWORD = os.getenv('SUPABASE_DB_PASSWORD')
 SUPABASE_DB_HOST = os.getenv('SUPABASE_DB_HOST')
 
-SUPABASE_URL = os.getenv('SUPABASE_URL')
-SUPABASE_API_KEY = os.getenv('SUPABASE_API_KEY')
+SUPABASE_DB_URL = os.getenv('SUPABASE_URL')
+SUPABASE_DB_API_KEY = os.getenv('SUPABASE_API_KEY')
 
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
 
@@ -79,11 +83,10 @@ USER_PASSWORD = os.getenv('USER_PASSWORD')
 
 LINE_CHANNEL_ID = os.getenv('LINE_CHANNEL_ID')
 
-
 # Application definition
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://538a-2400-4051-6743-c500-a4e0-4a1-9b3e-ec87.ngrok-free.app/",
+    "https://5527-207-148-108-86.ngrok-free.app/",
     "https://meetinghelper-ver2.onrender.com/"
 ]
 
@@ -103,7 +106,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware', # 追加
+    #'whitenoise.middleware.WhiteNoiseMiddleware', # 追加
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
