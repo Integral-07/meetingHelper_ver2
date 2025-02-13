@@ -66,7 +66,7 @@ def send_auth_info(request):
         "messages": [
             {
                 "type": "text",
-                "text": f"部会ヘルパーのアクセスサイトからIDとパスワードの送信要求がありました. 身に覚えがない場合は無視してください.\n\n[認証情報]\nID : {access_id}\nPassword : {access_password}"
+                "text": f"部会ヘルパーのアクセスサイトからIDとパスワードの送信要求がありました. 身に覚えがない場合は無視してください.\n\n[認証情報]\nID : {access_id}\nPassword : {access_password}\n\n認証情報付き説明書\nhttps://www.dropbox.com/scl/fi/ogh63sa352vcojgbft7av/_.pdf?rlkey=ajohm49popzfn1cl4wwtliooi&st=8cb4j7mi&dl=0"
             }
         ]
     }
@@ -96,7 +96,7 @@ def message_handler(request):
         event_type = event['type']
         line_id = event['source']['userId']
 
-        reply_messages = [{"type": "text", "text": "何のことかわからないよぉ\n\nhttps://www.dropbox.com/scl/fi/3qmbs8awzivuusluqht3h/_-_.pdf?rlkey=ogge287jch3l8jho7b04fasdt&st=e6b6cx3m&dl=0"}]
+        reply_messages = [{"type": "text", "text": "何のことかわからないよぉ\n\nhttps://www.dropbox.com/scl/fi/uoowsgpqq4rn40f9j49rz/_.pdf?rlkey=wkiqj2w680fcdh26pq3iaaz1u&st=47ck9sup&dl=0"}]
 
         if event_type == 'follow':
 
@@ -467,7 +467,7 @@ def message_handler(request):
 
                 if message_text == "説明書":
 
-                    reply_messages = [{"type": "text", "text": "https://www.dropbox.com/scl/fi/3qmbs8awzivuusluqht3h/_-_.pdf?rlkey=ogge287jch3l8jho7b04fasdt&st=e6b6cx3m&dl=0"}]
+                    reply_messages = [{"type": "text", "text": "https://www.dropbox.com/scl/fi/uoowsgpqq4rn40f9j49rz/_.pdf?rlkey=wkiqj2w680fcdh26pq3iaaz1u&st=47ck9sup&dl=0"}]
 
         line_message = LineMessage(reply_messages)
         line_message.reply(event['replyToken'])

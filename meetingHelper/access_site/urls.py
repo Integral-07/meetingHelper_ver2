@@ -3,9 +3,8 @@ from . import views
 from line_api.views import send_auth_info
 
 urlpatterns = [
-    path("", views.index),
+    #path("", views.index),
     path("login/", views.user_login, name="login"),
-    #path("signup/", views.signup, name="signup"),
     #path('line/login/', views.line_login, name='line_login'),
     #path('line/callback/', views.line_callback, name='line_callback'),
     path('dash_board/', views.dash_board, name="dash_board"), 
