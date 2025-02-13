@@ -140,6 +140,11 @@ def message_handler(request):
                             "label": "2年生",
                             "text": "GradeClass" + str(gradeIndex_second)
                         },
+                        {
+                            "type": "message",
+                            "label": "3年生",
+                            "text": "GradeClass" + str(gradeIndex)
+                        },
                     ]
                 }
             }
