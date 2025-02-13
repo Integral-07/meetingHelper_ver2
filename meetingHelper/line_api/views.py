@@ -96,7 +96,7 @@ def message_handler(request):
         event_type = event['type']
         line_id = event['source']['userId']
 
-        reply_messages = [{"type": "text", "text": "何のことかわからないよぉ～？\n\nhttps://www.dropbox.com/scl/fi/zooivgoghggkyttqxnp4c/_.pdf?rlkey=mifunwp2dcqe8ert48l279mfd&st=z86lgu57&dl=0"}]
+        reply_messages = [{"type": "text", "text": "何のことかわからないよぉ\n\nhttps://www.dropbox.com/scl/fi/zooivgoghggkyttqxnp4c/_.pdf?rlkey=mifunwp2dcqe8ert48l279mfd&st=z86lgu57&dl=0"}]
 
         if event_type == 'follow':
 
