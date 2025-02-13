@@ -96,7 +96,7 @@ def message_handler(request):
         event_type = event['type']
         line_id = event['source']['userId']
 
-        reply_messages = [{"type": "text", "text": "何のことかわからないよぉ\n\nhttps://www.dropbox.com/scl/fi/zooivgoghggkyttqxnp4c/_.pdf?rlkey=mifunwp2dcqe8ert48l279mfd&st=z86lgu57&dl=0"}]
+        reply_messages = [{"type": "text", "text": "何のことかわからないよぉ\n\nhttps://www.dropbox.com/scl/fi/3qmbs8awzivuusluqht3h/_-_.pdf?rlkey=ogge287jch3l8jho7b04fasdt&st=e6b6cx3m&dl=0"}]
 
         if event_type == 'follow':
 
@@ -467,7 +467,7 @@ def message_handler(request):
 
                 if message_text == "説明書":
 
-                    reply_messages = [{"type": "text", "text": "https://www.dropbox.com/scl/fi/zooivgoghggkyttqxnp4c/_.pdf?rlkey=mifunwp2dcqe8ert48l279mfd&st=z86lgu57&dl=0"}]
+                    reply_messages = [{"type": "text", "text": "https://www.dropbox.com/scl/fi/3qmbs8awzivuusluqht3h/_-_.pdf?rlkey=ogge287jch3l8jho7b04fasdt&st=e6b6cx3m&dl=0"}]
 
         line_message = LineMessage(reply_messages)
         line_message.reply(event['replyToken'])
