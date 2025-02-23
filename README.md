@@ -22,7 +22,7 @@ MeetingHelper ver.2
 </ul>
   <p align="left">
     <br />
-    <a href="#"><strong>プロジェクト詳細（Qiita記事） »</strong></a>
+    <a href="#"><strong>プロジェクト詳細（Qiita記事） »</strong></a><br>
     <a href="https://www.dropbox.com/scl/fi/uoowsgpqq4rn40f9j49rz/_.pdf?rlkey=wkiqj2w680fcdh26pq3iaaz1u&st=47ck9sup&dl=0"><strong>MeetingHelper(部会ヘルパ)説明書 »</strong></a>
     <br />
     <br />
