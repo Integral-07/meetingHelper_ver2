@@ -22,7 +22,7 @@ MeetingHelper ver.2
 </ul>
   <p align="left">
     <br />
-    <a href="#"><strong>プロジェクト詳細（Qiita記事） »</strong></a>
+    <a href="https://qiita.com/Integral-07/items/c2a6cc0e72ec6095aabb"><strong>プロジェクト詳細（Qiita記事） »</strong></a>
     <br>
     <br>
     <a href="https://www.dropbox.com/scl/fi/m1zdvxrh41585sv96a2ei/_.pdf?rlkey=9zas2mep4rbjyrrmgeq8esq1b&st=ezwbke97&dl=0"><strong>MeetingHelper(部会ヘルパ)説明書 »</strong></a>
@@ -45,6 +45,10 @@ MeetingHelper ver.2
   <img src="https://img.shields.io/badge/-Docker-1488C6.svg?logo=docker&style=for-the-badge">
 </p>
 
+## システム構成
+
+LINEからアクセス可能な機能は`line-bot-sdk`を用いてLINEMessagingAPIで実装し、<br>
+一部機能は、`APScheduler`を用いて定期実行を実装しています
 
 ## 環境
 
