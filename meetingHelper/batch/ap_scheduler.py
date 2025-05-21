@@ -5,7 +5,7 @@ from datetime import date
 
 def periodic_execution():
 
-    print("periodic")
+    #print("periodic")
     today = date.today()
     weekday_number = today.weekday()
 
@@ -45,6 +45,6 @@ def clear_authinfo_times():
 def start():
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(periodic_execution, 'interval', minutes=1)
+    scheduler.add_job(periodic_execution, 'cron', hour=1)
     scheduler.add_job(clear_authinfo_times, 'cron', hour=1)
     scheduler.start()
