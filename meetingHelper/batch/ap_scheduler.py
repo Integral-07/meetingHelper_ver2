@@ -17,15 +17,22 @@ def periodic_execution():
 
     if weekday_number == schedule_dayafter_index:
     
-        data = {
-            "absent_flag": 0,
-            "groupsep_flag": 0,
-            "absent_reason": ""
-        }
+        while(True):
+            data = {
+                "absent_flag": 0,
+                "groupsep_flag": 0,
+                "absent_reason": ""
+            }
 
-        Member.objects.all().update(**data)
+            Member.objects.all().update(**data)
 
-        print("Cleared Status!!")
+            could_clear = Member.objects.exclude(absent_reason="").count()
+            if(!could_clear):
+                print("Cleared Status!!")
+                break
+            
+            print("faild to clear status")
+
 
 def clear_authinfo_times():
 
@@ -37,6 +44,6 @@ def clear_authinfo_times():
 def start():
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(periodic_execution, 'cron', hour=1)
+    scheduler.add_job(periodic_execution, 'cron', minute='*')
     scheduler.add_job(clear_authinfo_times, 'cron', hour=1)
     scheduler.start()
