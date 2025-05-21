@@ -26,8 +26,8 @@ def periodic_execution():
 
             Member.objects.all().update(**data)
 
-            could_clear = Member.objects.exclude(absent_reason="").count()
-            if(!could_clear):
+            numRemain = Member.objects.exclude(absent_reason="").count()
+            if(numRemain == 0):
                 print("Cleared Status!!")
                 break
             
