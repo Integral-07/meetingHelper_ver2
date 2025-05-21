@@ -5,6 +5,7 @@ from datetime import date
 
 def periodic_execution():
 
+    print("periodic")
     today = date.today()
     weekday_number = today.weekday()
 
