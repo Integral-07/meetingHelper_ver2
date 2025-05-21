@@ -44,6 +44,6 @@ def clear_authinfo_times():
 def start():
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(periodic_execution, 'cron', minute='*')
+    scheduler.add_job(periodic_execution, 'interval', minutes=1)
     scheduler.add_job(clear_authinfo_times, 'cron', hour=1)
     scheduler.start()
