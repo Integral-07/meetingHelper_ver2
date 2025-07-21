@@ -1,16 +1,20 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from line_api.models import Member, System
 from datetime import date
+import logging
+logger = logging.getLogger(__name__)
 
 
-def periodic_execution():
+def get_current_system():
+    return System.objects.get(id=0)
 
-    #print("periodic")
+def clear_user_status():
+
     today = date.today()
     weekday_number = today.weekday()
 
     day_of_weeks = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
-    schedule = System.objects.get(id=0).meeting_DayOfWeek
+    schedule = get_current_system().meeting_DayOfWeek
 
     schedule_dayafter_index = day_of_weeks.index(schedule) + 1
     if schedule_dayafter_index >= 7:
@@ -18,33 +22,30 @@ def periodic_execution():
 
     if weekday_number == schedule_dayafter_index:
     
-        while(True):
-            data = {
-                "absent_flag": 0,
-                "groupsep_flag": 0,
-                "absent_reason": ""
-            }
+        
+        data = {
+            "absent_flag": 0,
+            "groupsep_flag": 0,
+            "absent_reason": ""
+        }
 
-            Member.objects.all().update(**data)
+        Member.objects.all().update(**data)
 
-            numRemain = Member.objects.exclude(absent_reason="").count()
-            if(numRemain == 0):
-                print("Cleared Status!!")
-                break
-            
-            print("faild to clear status")
+        numRemain = Member.objects.exclude(absent_reason="").count()
+        if(numRemain == 0):
+            logger.info("Cleared Status!!")
 
 
 def clear_authinfo_times():
 
     System.objects.all().update(auth_info_times=0)
 
-    print("Auth Info Reopened")
+    logger.info("Auth Info Reopened")
 
 
 def start():
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(periodic_execution, 'cron', hour=1)
-    scheduler.add_job(clear_authinfo_times, 'cron', hour=1)
+    scheduler.add_job(clear_user_status, 'cron', hour=1, id='job_clear_status', replace_existing=True)
+    scheduler.add_job(clear_authinfo_times, 'cron', hour=1, id='job_clear_auth', replace_existing=True)
     scheduler.start()

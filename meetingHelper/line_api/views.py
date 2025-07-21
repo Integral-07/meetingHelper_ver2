@@ -45,9 +45,13 @@ class LineMessage():
         except urllib.error.URLError as err:
             print(err.reason)
 
+def get_current_system():
+    return System.objects.get(id=0)
+
+# アクセスサイトへの認証情報を送信する
 def send_auth_info(request):
 
-    sending_times = System.objects.get(id=0).auth_info_times
+    sending_times = get_current_system().auth_info_times
 
     if sending_times >= 2:
 
@@ -56,7 +60,7 @@ def send_auth_info(request):
     
     System.objects.all().update(auth_info_times=sending_times + 1)
 
-    chief_id = System.objects.get(id=0).chief_id
+    chief_id = get_current_system().chief_id
 
     access_id = settings.USER_NAME
     access_password = settings.USER_PASSWORD
@@ -86,8 +90,7 @@ def send_auth_info(request):
 @csrf_exempt
 def message_handler(request):
 
-
-    system = System.objects.get(id=0)
+    system = get_current_system()
 
     if request.method == 'POST':
 
@@ -424,19 +427,13 @@ def message_handler(request):
                     if message_text.isdigit() and int(message_text) <= num_member and int(message_text) != 0: #入力値が出席可能なメンバ数以下の整数ならば
 
                         try:
-                            #member_list = Member.objects.filter(absent_reason="")
                             num_groups = int(message_text)
 
                             groups = MakeGroups(num_groups)
 
-                            #return_text = ""
-                            #for i, group in enumerate(groups, 1):
-                            #    return_text += f"グループ {i}: {[member.name for member in group]}" + "\n"
-
                             updated_member = Member(user_id=member.user_id, name=member.name, grade_class=member.grade_class, absent_flag=0, groupsep_flag=0, absent_reason=member.absent_reason)
                             updated_member.save()
                             media_url = GenerateGroupImage(num_groups, groups)
-                            #media_url = request_raw.build_absolute_uri('/media/group_table.png')
                             reply_messages = [
                                 {
                                     "type": "text", 
