@@ -54,7 +54,6 @@ def start():
         'interval',
         minutes=1,
         id='job_clear_status',
-        replace_existing=True
     )
     #scheduler.add_job(clear_authinfo_times, 'cron', hour=2, id='job_clear_auth', replace_existing=True)
     scheduler.start()
