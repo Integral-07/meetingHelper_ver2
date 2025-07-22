@@ -3,6 +3,7 @@ from . import views
 from line_api.views import send_auth_info
 
 urlpatterns = [
+    path("", views.index, name="index"),
     path("login/", views.user_login, name="login"),
     path('dash_board/', views.dash_board, name="dash_board"), 
     path('member_edit/<member_id>/', views.member_edit, name='member_edit'),
