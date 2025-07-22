@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 from line_api.views import send_auth_info
 
+app_name = "access_site"
+
 urlpatterns = [
-    #path("", views.index),
+    path("", views.index, name="index"),
     path("login/", views.user_login, name="login"),
-    #path('line/login/', views.line_login, name='line_login'),
-    #path('line/callback/', views.line_callback, name='line_callback'),
     path('dash_board/', views.dash_board, name="dash_board"), 
     path('member_edit/<member_id>/', views.member_edit, name='member_edit'),
     path('member_delete/<member_id>/', views.member_delete, name='member_delete'),

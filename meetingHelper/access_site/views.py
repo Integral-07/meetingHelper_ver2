@@ -33,6 +33,7 @@ def user_login(request):
     else:
         return render(request, 'access_site/login.html', {'error': ''})
 
+"""
 def line_login(request):
 
     state = secrets.token_urlsafe(16)  # CSRF対策用のランダムな値を生成
@@ -43,13 +44,14 @@ def line_login(request):
     params = {
         "response_type": "code",
         "client_id": settings.LINE_CHANNEL_ID,  # settings.pyに設定
-        "redirect_uri": request.build_abusolute_uri(),
+        "redirect_uri": request.build_absolute_uri(),
         "state": state,
         "scope": "profile openid",
         "nonce": secrets.token_urlsafe(16)  # リプレイアタック防止
     }
     auth_url = f"{line_auth_url}?{urllib.parse.urlencode(params)}"
     return redirect(auth_url)
+
 
 def line_callback(request):
     code = request.GET.get("code")
@@ -78,6 +80,7 @@ def line_callback(request):
     profile_data = profile_response.json()
 
     return JsonResponse(profile_data)  # JSONでユーザー情報を返す
+"""
 
 def signup(request):
 
@@ -96,7 +99,8 @@ def dash_board(request):
             line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
             profile = line_bot_api.get_profile(member.user_id)
             nick_name = profile.display_name #-> 表示名
-        except:
+        except Exception as e:
+            print(e)
             nick_name = "不明"
         nickname_list.append(nick_name)
 
@@ -110,7 +114,8 @@ def dash_board(request):
         line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
         profile = line_bot_api.get_profile(chief_id)
         chief_nickname = profile.display_name #-> 表示名
-    except:
+    except Exception as e:
+        print(e)
         chief_nickname = "不明"
 
     params = {
@@ -133,10 +138,11 @@ def member_edit(request, member_id):
     if request.method == 'POST':
         form = MemberEditForm(request.POST, instance=member)
         if form.is_valid():
-            #form.save()
-            updated_member = Member(user_id=member.user_id, name=form.cleaned_data['name'], grade_class=form.cleaned_data['grade_class'], absent_flag=member.absent_flag, groupsep_flag=member.groupsep_flag, absent_reason=member.absent_reason)
+
+            updated_member = Member(user_id=member.user_id, name=form.cleaned_data['name'], grade_class=form.cleaned_data['grade_class'], \
+                                        absent_flag=member.absent_flag, groupsep_flag=member.groupsep_flag, absent_reason=form.cleaned_data['absent_reason'])
             updated_member.save()
-            return redirect('dash_board') 
+            return redirect('access_site:dash_board') 
         else:
             form = MemberEditForm(instance=member)
 
@@ -146,7 +152,8 @@ def member_edit(request, member_id):
                 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
                 profile = line_bot_api.get_profile(member.user_id)
                 nick_name = profile.display_name #-> 表示名
-            except:
+            except Exception as e:
+                print(e)
                 nick_name = "不明"
 
             params = {
@@ -171,7 +178,8 @@ def member_edit(request, member_id):
             line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
             profile = line_bot_api.get_profile(member.user_id)
             nick_name = profile.display_name #-> 表示名
-        except:
+        except Exception as e:
+            print(e)
             nick_name = "不明"
 
         params = {
@@ -200,7 +208,8 @@ def member_delete(request, member_id):
                 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
                 profile = line_bot_api.get_profile(member_id)
                 nick_name = profile.display_name #-> 表示名
-            except:
+            except Exception as e:
+                print(e)
                 nick_name = "不明"
             
 
@@ -219,14 +228,15 @@ def member_delete(request, member_id):
         will_delete_member = get_object_or_404(Member, user_id=member_id)
         will_delete_member.delete()
 
-        return redirect('dash_board') 
+        return redirect('access_site:dash_board') 
     else:
 
         try:
             line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
             profile = line_bot_api.get_profile(member_id)
             nick_name = profile.display_name #-> 表示名
-        except:
+        except Exception as e:
+            print(e)
             nick_name = "不明"
             
 
@@ -253,7 +263,7 @@ def schedule_edit(request):
             updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id, flag_register=system.flag_register, meeting_DayOfWeek=form.cleaned_data['schedule'], auth_info_times=system.auth_info_times)
             updated_system.save()
             
-            return redirect('dash_board') 
+            return redirect('access_site:dash_board') 
         else:
 
             form = ScheduleEditForm(instance=system)
@@ -284,7 +294,7 @@ def chief_edit(request):
             updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=selected_option, flag_register=system.flag_register, meeting_DayOfWeek=system.meeting_DayOfWeek, auth_info_times=system.auth_info_times)
             updated_system.save()
 
-            return redirect('dash_board') 
+            return redirect('access_site:dash_board') 
 
     
     chief_name = chief.name
@@ -292,7 +302,8 @@ def chief_edit(request):
         line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
         profile = line_bot_api.get_profile(system.chief_id)
         chief_nickname = profile.display_name #-> 表示名
-    except:
+    except Exception as e:
+        print(e)
         chief_nickname = "不明"
 
     members = Member.objects.all().order_by("-grade_class")

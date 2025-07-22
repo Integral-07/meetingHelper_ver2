@@ -33,7 +33,7 @@
 
 
           <td class="px-4 py-2 border">
-            <a href="{% url 'schedule_edit' %}" class="text-blue-500 hover:underline">変更</a>
+            <a href="{% url 'access_site:schedule_edit' %}" class="text-blue-500 hover:underline">変更</a>
           </td>
         </tr>
       </tbody>
@@ -58,7 +58,7 @@
             <td class="px-4 py-2 border">{{ chief_name }}( {{ chief_nickname }} )</td>
 
           <td class="px-4 py-2 border">
-            <a href="{% url 'chief_edit' %}" class="text-blue-500 hover:underline">変更</a>
+            <a href="{% url 'access_site:chief_edit' %}" class="text-blue-500 hover:underline">変更</a>
           </td>
         </tr>
       </tbody>
@@ -94,10 +94,10 @@
             <td class="px-4 py-2 border">{{ nick_name }}</td>
 
             <td class="px-4 py-2 border">
-              <a href="{% url 'member_edit' member.user_id %}" class="text-blue-500 hover:underline">編集</a>
+              <a href="{% url 'access_site:member_edit' member.user_id %}" class="text-blue-500 hover:underline">編集</a>
             </td>
             <td class="px-4 py-2 border">
-              <a href="{% url 'member_delete' member.user_id %}" class="text-red-500 hover:underline">削除</a>
+              <a href="{% url 'access_site:member_delete' member.user_id %}" class="text-red-500 hover:underline">削除</a>
             </td>
           </tr>
           {% empty %}

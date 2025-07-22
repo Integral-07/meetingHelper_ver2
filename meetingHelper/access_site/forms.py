@@ -18,10 +18,15 @@ class MemberEditForm(forms.ModelForm):
         required=True,
         widget=forms.Select(attrs={'class': 'input-border'})
     )
+    absent_reason = forms.CharField(
+        max_length=100, 
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'input-border'})
+    )
 
     class Meta:
         model = Member
-        fields = ['user_id', 'name', 'grade_class']
+        fields = ['user_id', 'name', 'grade_class', 'absent_reason']
 
 
 class ScheduleEditForm(forms.ModelForm):

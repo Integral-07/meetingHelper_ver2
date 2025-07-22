@@ -40,6 +40,11 @@
         {{ form.name }} 
       </div>
 
+      <div class="mb-4">
+        <label class="justify-center text-gray-700">欠席理由(空欄⇒出席):</label>
+        {{ form.absent_reason }} 
+      </div>
+
       <div class="mb-4 text-red-500">
         {{ error }} 
       </div>
@@ -51,7 +56,7 @@
           更新
         </button>
 
-        <a href="{% url 'dash_board' %}" class="ml-20 bg-green-400 text-white px-4 py-2 rounded hover:bg-blue-400">キャンセル</a>
+        <a href="{% url 'access_site:dash_board' %}" class="ml-20 bg-green-400 text-white px-4 py-2 rounded hover:bg-blue-400">キャンセル</a>
       </div>
     </form>
   </div>

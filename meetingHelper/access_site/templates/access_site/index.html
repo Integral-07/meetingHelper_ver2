@@ -1,31 +1,14 @@
-{% load static %}
+{% extends 'access_site/base.html' %}
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
+{% block content %}
+<div class="flex-grow container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10 mb-10 text-center">
+  これは、山梨大学　生協学生委員会の委員管理システムです。<br>
+  あなたが、当該組織の委員長である又は認証権限がある場合は下記のページへ移動してください。<br>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>部会ヘルパー</title>
-  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gradient-to-br from-gray-100 to-gray-300 text-gray-900 font-sans">
+  <hr class="my-4">
 
-  <!-- ヘッダー -->
-  <header class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-5 shadow-lg">
-    <h1 class="text-3xl font-bold text-center tracking-wide">部会ヘルパー</h1>
-  </header>
-
-  <!-- メインコンテンツ -->
-  <main class="container max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-2xl mt-10">
-    {% block content %}
-    {% endblock %}
-  </main>
-
-  <!-- フッター -->
-  <footer class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-4 mt-10 shadow-lg text-center text-sm">
-    <p>© 2025 Integral-07</p>
-  </footer>
-
-</body>
-</html>
+  <a href="{% url 'access_site:dash_board' %}" class="text-blue-600 underline hover:text-blue-800 inline-block mt-4">
+    部会ヘルパーアクセスサイト-ダッシュボード
+  </a>
+</div>
+{% endblock %}
