@@ -138,9 +138,9 @@ def member_edit(request, member_id):
     if request.method == 'POST':
         form = MemberEditForm(request.POST, instance=member)
         if form.is_valid():
-            #form.save()
+
             updated_member = Member(user_id=member.user_id, name=form.cleaned_data['name'], grade_class=form.cleaned_data['grade_class'], \
-                                        absent_flag=member.absent_flag, groupsep_flag=member.groupsep_flag, absent_reason=member.absent_reason)
+                                        absent_flag=member.absent_flag, groupsep_flag=member.groupsep_flag, absent_reason=form.cleaned_data['absent_reason'])
             updated_member.save()
             return redirect('dash_board') 
         else:
