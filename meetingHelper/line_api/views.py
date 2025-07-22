@@ -6,6 +6,7 @@ from .models import Member, System
 from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib import messages
+import os
 
 def index(request):
 
@@ -64,13 +65,14 @@ def send_auth_info(request):
 
     access_id = settings.USER_NAME
     access_password = settings.USER_PASSWORD
+    URL_MANUAL_AUTHORITY = os.getenv('URL_MANUAL_AUTHORITY')
 
     body = {
         "to": chief_id,
         "messages": [
             {
                 "type": "text",
-                "text": f"部会ヘルパーのアクセスサイトからIDとパスワードの送信要求がありました. 身に覚えがない場合は無視してください.\n\n[認証情報]\nID : {access_id}\nPassword : {access_password}\n\n認証情報付き説明書\nhttps://www.dropbox.com/scl/fi/ogh63sa352vcojgbft7av/_.pdf?rlkey=ajohm49popzfn1cl4wwtliooi&st=8cb4j7mi&dl=0"
+                "text": f"部会ヘルパーのアクセスサイトからIDとパスワードの送信要求がありました. 身に覚えがない場合は無視してください.\n\n[認証情報]\nID : {access_id}\nPassword : {access_password}\n\n認証情報付き説明書\n{URL_MANUAL_AUTHORITY}"
             }
         ]
     }
