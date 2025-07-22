@@ -2,24 +2,33 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from line_api.models import Member, System
 from datetime import date
 import logging
-logger = logging.getLogger(__name__)
+
+# ログ設定
+logging.basicConfig(
+    level=logging.INFO, 
+    format='%(asctime)s %(levelname)s %(name)s %(message)s'
+)
+
 
 
 def get_current_system():
     try:
         return System.objects.get(id=0)
     except System.DoesNotExist:
-        print("System with id=0 not found.")
+        logging.info("System with id=0 not found.")
         return None
 
 def clear_user_status():
 
-    print("system is about to execute clear_user_status")
     today = date.today()
     weekday_number = today.weekday()
 
     day_of_weeks = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
-    schedule = get_current_system().meeting_DayOfWeek
+    system = get_current_system()
+    if system is None:
+        logging.error("System情報が取得できませんでした。clear_user_statusをスキップします。")
+        return
+    schedule = system.meeting_DayOfWeek
 
     schedule_dayafter_index = day_of_weeks.index(schedule) + 1
     if schedule_dayafter_index >= 7:
@@ -38,9 +47,9 @@ def clear_user_status():
 
         numRemain = Member.objects.exclude(absent_reason="").count()
         if(numRemain == 0):
-            print("Cleared Status!!")
+            logging.info("Cleared Status!!")
         else:
-            print("failed to clear status...")
+            logging.info("failed to clear status...")
 
 
 def clear_authinfo_times():
@@ -50,7 +59,6 @@ def clear_authinfo_times():
 
 def start():
 
-    print("ap_schedular started")
     scheduler = BackgroundScheduler()
     #scheduler.add_job(clear_user_status, 'cron', hour=1, id='job_clear_status', replace_existing=True)
     scheduler.add_job(
