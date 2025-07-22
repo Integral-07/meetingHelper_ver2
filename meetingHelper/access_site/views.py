@@ -142,7 +142,7 @@ def member_edit(request, member_id):
             updated_member = Member(user_id=member.user_id, name=form.cleaned_data['name'], grade_class=form.cleaned_data['grade_class'], \
                                         absent_flag=member.absent_flag, groupsep_flag=member.groupsep_flag, absent_reason=form.cleaned_data['absent_reason'])
             updated_member.save()
-            return redirect('dash_board') 
+            return redirect('access_site:dash_board') 
         else:
             form = MemberEditForm(instance=member)
 
@@ -228,7 +228,7 @@ def member_delete(request, member_id):
         will_delete_member = get_object_or_404(Member, user_id=member_id)
         will_delete_member.delete()
 
-        return redirect('dash_board') 
+        return redirect('access_site:dash_board') 
     else:
 
         try:
@@ -263,7 +263,7 @@ def schedule_edit(request):
             updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=system.chief_id, flag_register=system.flag_register, meeting_DayOfWeek=form.cleaned_data['schedule'], auth_info_times=system.auth_info_times)
             updated_system.save()
             
-            return redirect('dash_board') 
+            return redirect('access_site:dash_board') 
         else:
 
             form = ScheduleEditForm(instance=system)
@@ -294,7 +294,7 @@ def chief_edit(request):
             updated_system = System(id=system.id, grade_index=system.grade_index, chief_id=selected_option, flag_register=system.flag_register, meeting_DayOfWeek=system.meeting_DayOfWeek, auth_info_times=system.auth_info_times)
             updated_system.save()
 
-            return redirect('dash_board') 
+            return redirect('access_site:dash_board') 
 
     
     chief_name = chief.name

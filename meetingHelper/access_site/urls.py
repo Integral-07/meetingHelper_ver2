@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from line_api.views import send_auth_info
 
+app_name = "access_site"
+
 urlpatterns = [
     path("", views.index, name="index"),
     path("login/", views.user_login, name="login"),
