@@ -33,9 +33,9 @@ def clear_user_status():
 
         numRemain = Member.objects.exclude(absent_reason="").count()
         if(numRemain == 0):
-            logger.info("Cleared Status!!")
+            print("Cleared Status!!")
         else:
-            logger.info("failed to clear status...")
+            print("failed to clear status...")
 
 
 def clear_authinfo_times():
@@ -47,6 +47,7 @@ def clear_authinfo_times():
 
 def start():
 
+    print("ap_schedular started")
     scheduler = BackgroundScheduler()
     #scheduler.add_job(clear_user_status, 'cron', hour=1, id='job_clear_status', replace_existing=True)
     scheduler.add_job(
