@@ -52,7 +52,7 @@ def start():
     scheduler.add_job(
         clear_user_status,
         'interval',
-        minutes='1',
+        minutes=1,
         id='job_clear_status',
         replace_existing=True
     )
