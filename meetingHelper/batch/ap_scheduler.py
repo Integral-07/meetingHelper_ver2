@@ -9,7 +9,7 @@ def get_current_system():
     try:
         return System.objects.get(id=0)
     except System.DoesNotExist:
-        logger.warning("System with id=0 not found.")
+        print("System with id=0 not found.")
         return None
 
 def clear_user_status():
@@ -46,8 +46,6 @@ def clear_user_status():
 def clear_authinfo_times():
 
     System.objects.all().update(auth_info_times=0)
-
-    logger.info("Auth Info Reopened")
 
 
 def start():
