@@ -60,12 +60,6 @@ def clear_authinfo_times():
 def start():
 
     scheduler = BackgroundScheduler()
-    #scheduler.add_job(clear_user_status, 'cron', hour=1, id='job_clear_status', replace_existing=True)
-    scheduler.add_job(
-        clear_user_status,
-        'interval',
-        minutes=1,
-        id='job_clear_status',
-    )
-    #scheduler.add_job(clear_authinfo_times, 'cron', hour=2, id='job_clear_auth', replace_existing=True)
+    scheduler.add_job(clear_user_status, 'cron', hour=1, id='job_clear_status')
+    scheduler.add_job(clear_authinfo_times, 'cron', hour=2, id='job_clear_auth')
     scheduler.start()
