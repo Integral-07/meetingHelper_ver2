@@ -10,6 +10,7 @@ def get_current_system():
 
 def clear_user_status():
 
+    print("system is about to execute clear_user_status")
     today = date.today()
     weekday_number = today.weekday()
 
