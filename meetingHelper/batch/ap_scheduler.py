@@ -51,8 +51,8 @@ def start():
     #scheduler.add_job(clear_user_status, 'cron', hour=1, id='job_clear_status', replace_existing=True)
     scheduler.add_job(
         clear_user_status,
-        'cron',
-        minute='*',
+        'interval',
+        minute='1',
         id='job_clear_status',
         replace_existing=True
     )
