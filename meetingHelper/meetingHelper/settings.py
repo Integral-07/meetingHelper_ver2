@@ -111,6 +111,7 @@ DATABASES = {
         'OPTIONS': {
             'options': '-c use_prepared_statements=0',
         },
+        'CONN_HEALTH_CHECKS': True,  # 使い回す接続が生きているか確認する
         'DISABLE_SERVER_SIDE_CURSORS': True,  # サーバーサイドカーソルを無効化
     }
 }

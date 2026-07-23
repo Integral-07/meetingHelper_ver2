@@ -1,4 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
+from django.db import close_old_connections
 from line_api.models import Member, System
 from datetime import date
 import logging
@@ -19,6 +20,7 @@ def get_current_system():
         return None
 
 def clear_user_status():
+    close_old_connections()
 
     today = date.today()
     weekday_number = today.weekday()
@@ -53,6 +55,7 @@ def clear_user_status():
 
 
 def clear_authinfo_times():
+    close_old_connections()
 
     System.objects.all().update(auth_info_times=0)
 
