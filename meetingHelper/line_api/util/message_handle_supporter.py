@@ -144,7 +144,9 @@ def GenerateGroupImage(_num_groups, _groups):
                 supabase.storage.from_('group_bucket').remove(file_path)
 
         # 新しいファイルのアップロード
-        supabase.storage.from_('group_bucket').upload(file_path, img_bytes)
+        supabase.storage.from_('group_bucket').upload(
+            file_path, img_bytes, file_options={"content-type": "image/png"}
+        )
 
     except Exception as e:
         print(f"アップロードエラー：{e}")
@@ -156,7 +158,7 @@ def GenerateGroupImage(_num_groups, _groups):
         return None
 
 
-    return response + str(time.time())
+    return response + f"?t={time.time()}"
 
 def rotateGeneration():
 

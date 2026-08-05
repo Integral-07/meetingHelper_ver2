@@ -8,5 +8,5 @@ django-tailwind==3.8.0
 whitenoise==6.9.0
 apscheduler==3.11.0
 decouple==0.0.7
-supabase
+supabase==2.31.0
 python-dotenv==1.1.1
