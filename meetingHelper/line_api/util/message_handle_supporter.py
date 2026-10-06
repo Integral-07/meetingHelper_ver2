@@ -181,9 +181,9 @@ def identifyGrade(_grade_class):
     first_grade = grade_index % 3 + 1
     second_grade = (grade_index + 1) % 3 + 1
 
-    if _grade_class == first_grade:
+    if _grade_class == "GradeClass" + str(first_grade):
         ones_grade = 1
-    elif _grade_class == second_grade:
+    elif _grade_class == "GradeClass" + str(second_grade):
         ones_grade = 2
     else:
         ones_grade = 3
